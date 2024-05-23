@@ -1,4 +1,4 @@
-# 知识点汇总
+# Some knowledge I learned
 
 [roadmap](https://roadmap.sh/frontend)
 
@@ -8,12 +8,16 @@
 
 ## css
 
-## 开发工具
+## webpack
 
-## 常用类库
+## vite
 
-## 网络
+## nodejs
 
-## 算法
+## Common Libs
 
-## 设计模式
+## Network
+
+## Algorithm
+
+## Design Patterns
