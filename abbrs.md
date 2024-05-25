@@ -9,6 +9,7 @@
 - REST: Representational State Transfer
 - CSP: Content Security Policy
 - XSS: Cross-site scripting
+- REPL: Read-Evaluate-Print Loop
 
 ## Organization
 
