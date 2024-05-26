@@ -682,3 +682,109 @@ The Math namespace object contains static properties and methods for mathematica
 
 Date object encapsulate an integral number that represents milliseconds since the midnight at the beginning of January, 1, 1970, UTC.
 
+### Constructor
+
+```javascript
+
+new Date()
+new Date(milliseconds)
+new Date(dateString) // format as 'YYYY-MM-DDTHH:mm:ss.sssZ', parse by Date.prase()
+new Date(dateObject) // copy the dateObject
+
+new Date(year, monthIndex)
+new Date(year, monthIndex, day)
+new Date(year, monthIndex, day, hours)
+new Date(year, monthIndex, day, hours, minutes)
+new Date(year, monthIndex, day, hours, minutes, seconds)
+new Date(year, monthIndex, day, hours, minutes, seconds, milliseconds)
+
+Date()
+
+```
+
+### Static methods
+
+- `Date.now()` returns a number representing the timestamp, in milliseconds, of the current time. For complex scenarios, you should use performance api.
+- `Date.parse(dataString)` parses a string representation of a date, and returns the date's timestamp that is milliseconds. Supported format of the string including GMT and UTC styled date string, e.g 2019-01-01T00:00:00.000Z, 2019-01-01T00:00:00.000+08:00, 01 Jan 1970 00:00:00 GMT. If the string not match the format, then return NaN.
+- `Date.UTC(year[, monthIndex[, day[, hour[, minute[, second[, millisecond]]]]]])` returns the date's timestamp.
+
+### Instance methods
+
+- `Date.prototype[Symbol.toPrimitive](hint)` If the hit is 'string' | 'default', the method returns date string. If it is 'number', the method returns timestamp. For other values the method throws a TypeError. This method is called by this.valueOf which returns timestamp or this.toString which returns date string. When primitive coercion is needed, the valueOf will be called before toString.
+- `Date.prototype.getFullYear()` returns the year for this date according to local time.
+- `Date.prototype.getMonth()` returns the month index for this date according to local time.
+- `Date.prototype.getDate()` returns the day of the month for this date according to local time.
+- `Date.prototype.getDay()` returns the day of the week, where 0 represent Sunday for this date according to local time.
+- `Date.prototype.getHours()` returns the hours for this date according to local time.
+- `Date.prototype.getMinutes()`
+- `Date.prototype.getSeconds()`
+- `Date.prototype.getMilliseconds()`
+- `Date.prototype.getTime()` returns timestamp.
+- `Date.prototype.getTimezoneOffset()` returns timezone offset from UTC timezone in minutes.
+- `Date.prototype.getUTCFullYear()` according to universal time.
+- `Date.prototype.getUTCMonth()`
+- `Date.prototype.getUTCDate()`
+- `Date.prototype.getUTCDay()`
+- `Date.prototype.getUTCHours()`
+- `Date.prototype.getUTCMinutes()`
+- `Date.prototype.getUTCSeconds()`
+- `Date.prototype.getUTCMilliseconds()`
+- `Date.prototype.setFullYear(year[, monthIndex[, date]])` sets year, month, or date according to the local time and returns timestamp. if the arguments are invalid, the dateObject will be set to Invalid Date, and return NaN. If the month or date are out of the expected range, the date object will be updated accordingly.
+- `Date.prototype.setMonth(monthIndex[, date])`
+- `Date.prototype.setDate(date)`
+- `Date.prototype.setHours(hours[, minutes[, seconds[, milliseconds]]])`
+- `Date.prototype.setMinutes(minutes[, seconds, milliseconds])`
+- `Date.prototype.setSeconds(seconds[, milliseconds])`
+- `Date.prototype.setMilliseconds(milliseconds)`
+- `Date.prototype.setUTCFullYear(year[, monthIndex[, date]])` according to universal time.
+- `Date.prototype.setUTCMonth(monthIndex[, date])`
+- `Date.prototype.setUTCDate(date)`
+- `Date.prototype.setUTCHours(hours[, minutes[, seconds[, milliseconds]]])`
+- `Date.prototype.setUTCMinutes(minutes[, seconds, milliseconds])`
+- `Date.prototype.setUTCSeconds(seconds[, milliseconds])`
+- `Date.prototype.setUTCMilliseconds(milliseconds)`
+- `Date.prototype.toString()` returns a string representing this date interpreted in the local timezone.
+- `Date.prototype.toISOString()` returns UTC time formatted as 'YYYY-MM-DDTHH:mm:ss.sssZ' (Zulu time)
+- `Date.prototype.toJSON()` same as toIOSString
+- `Date.prototype.toUTCString()` returns UTC time formatted as 'Www, dd Mmm yyyy hh:mm:ss GMT'
+- `Date.prototype.toDateString()` returns a string representing the date portion of this date interpreted in the local timezone.
+- `Date.prototype.toTimeString()` returns a string representing the time portion of this date interpreted in the local timezone.
+- `Date.prototype.toLocaleString([locales[, options]])`
+- `Date.prototype.toLocaleDateString([locales[, options]])`
+- `Date.prototype.toLocaleTimeString([locales[, options]])`
+- `Date.prototype.valueOf()` is part of type coercion protocol.
+
+## String
+
+The String object is used to represent and manipulate a sequence of characters.
+
+### String coercion
+
+- Strings returned as-is.
+- undefined turns into 'undefined'
+- null turns into 'null'
+- true to 'true', false to 'false'
+- Numbers are converted with the same algorithm as toString(10)
+- BigInts same as Numbers
+- Symbols throw a TypeError.
+- Objects are first converted to a primitive by calling its `[Symbol.toPrimitive]()` with 'string' as hint, toString(), and valueOf() methods, in that order. The resulting primitive is then converted to a string.
+
+#### ways to achieve coercion
+
+- Template literal: `${x}`
+- The String() function
+- operator +: `'' + x`. Addition coerces the expression to a primitive, which calls `valueOf()` in priority. While template literal and `concat()` coerce the expression to string, which calls `toString()` in priority.
+
+### Static methods
+
+- `String.formCharCode([num, num1, ..., numN])` returns a string. Arguments are integer numbers between 0 to 65535(0xFFFF) representing a UTF-16 code unit. Numbers greater than 0xFFFF are truncated to the last 16 bits. No validity checks are performed.
+- `String.formCodePoint([num, num1, ..., numN])` returns a string, Arguments are integer between 0 to 0x10FFFF(inclusive) representing a unicode point. Coerced to number first, not integer or out of range throw RangeError.
+- `String.raw(str, str1, ..., strN)` | String.raw`templateString` is a tag function of template literals. Substitutions are processed, but escape sequences (e.g. \n) are not.
+
+### Instance methods
+
+- `String.prototype[Symbol.iterator]()` returns a
+
+### Instance property
+
+- `String: length` returns the length of the string in UTF-16 code units.
