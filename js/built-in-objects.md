@@ -130,7 +130,7 @@ NaN is Not-A-Number which equals to Number.NaN
 
 ## undefined
 
-`undefined` is only a variable of global scope, thus you can use undefined as an identifier in any other scope.
+`undefined` is only a variable of global scope, thus you can use undefined as an identifier in any other scope, but don't do this anyway.
 
 ```javascript
 
