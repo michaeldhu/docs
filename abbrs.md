@@ -10,6 +10,8 @@
 - CSP: Content Security Policy
 - XSS: Cross-site scripting
 - REPL: Read-Evaluate-Print Loop
+- UTC: Coordinated Universal Time
+- GMT: Greenwich Mean Time
 
 ## Organization
 

@@ -465,7 +465,7 @@ Object.hasOwn(fruits, 3); // true ('Orange')
 - `Symbol.species`
 - `Symbol.split`
 - `Symbol.toPrimitive`
-- `Symbol.toStringTag`
+- `Symbol.toStringTag`, Object.prototype.toString() looks up this symbol on `this` value for the property containing a string that represents the type of the Object.
 - `Symbol.unscopables`
 
 ### instance methods
@@ -477,6 +477,20 @@ Object.hasOwn(fruits, 3); // true ('Orange')
 ### instance properties
 
 - `Symbol.prototype.description` returns a string containing the description of this symbol or undefined.
+
+```javascript
+
+/* ------ toStringTag ------ */
+
+class ValidatorClass {
+  get [Symbol.toStringTag]() {
+    return 'Validator';
+  }
+}
+
+console.log(Object.prototype.toString.call(new ValidatorClass()));
+
+```
 
 ## Error
 
@@ -598,7 +612,73 @@ decodeURIComponent('%')
 
 Number values represent floating-point number like 77 or -7.7. Number type is a [double-precision 64-bit binary format IEEE-754](https://en.wikipedia.org/wiki/Double-precision_floating-point_format)
 
-### static methods
+### Static methods
 
 - `Number.isFinite(value)` determines whether the value is finite. Coerce first.
-- `
+- `Number.isInteger(value)` determines whether the value is integer. NaN and Infinity is not integer, while floating point number that can be represented as integer also returns true, e.g 7.0.
+- `Number.isNaN(value)`
+- `Number.isSafeInteger(value)`, the save integers consist of all integer form -2^53^ -1 to 2^53^ -1. Integers out of the range are not safe integer, since it can't be represent as IEEE-754 double-precision number.
+- `Number.parseFloat(value)` equals to the global parseFloat, the purpose is modularization of globals.
+- `Number.parseInt(value)` equals to the global parseInt.
+
+### Static properties
+
+- `Number.EPSILON` represents the difference between 1 and the smallest floating point number greater than 1. Since floating point number can't be precisely represent by using IEEE-754 standard.
+- `Number.MAX_SAFE_INTEGER` represents the maximum safe integer 2^53^ - 1
+- `Number.MAX_VALUE` represents the maximum value representable in JavaScript.
+- `Number.MIN_SAFE_INTEGER`
+- `Number.MIN_VALUE`
+- `Number.NaN`
+- `Number.NEGATIVE_INFINITY`
+- `Number.POSITIVE_INFINITY`
+
+### Instance methods
+
+- `Number.prototype.toExponential([fractionDigits])` returns a string representing the number in exponential notation. Throw TypeError when this method is invoked on non-number. Throw RangeError when the fractionDigits is out the range of 0 to 100.
+- `Number.prototype.toFixed([digits])` formats the number using [fixed-point notation](https://en.wikipedia.org/wiki/Fixed-point_arithmetic). Throw same error above.
+- `Number.prototype.toLocaleString()`
+- `Number.prototype.toPrecision([precision])`
+- `Number.prototype.toString()`
+- `Number.prototype.valueOf()`
+
+## BigInt
+
+BigInt values represent values which are too large to be represented by the number primitive. BigInt value can not be used whit methods in the built-in Math object and can not be mixed up with number value in operations.
+
+With n at last digit represent BigInt value, e.g 7n.
+
+### Static methods
+
+- `BigInt.asIntN(bits, bigint)` truncates a BigInt value to the given number of least significant bits and returns that value as a singed integer.
+- `BigInt.asUintN(bits, bigint)` same as above but return unsigned integer.
+
+### Instance methods
+
+- `BigInt.prototype.toLocaleString()`
+- `BigInt.prototype.toString()`
+- `BigInt.prototype.valueOf()`
+
+## Math
+
+The Math namespace object contains static properties and methods for mathematical constants and functions. Only works with Number, does not work with BigInt.
+
+### Most used
+
+- `Math.abs(value)` returns the absolute value of a number.
+- `Math.cbrt(value)` returns the cube root of a number.
+- `Math.ceil(value)` rounds up and returns the smallest integer greater than or equal to the given number.
+- `Math.floor(value)` rounds down and returns the largest integer less than or equal to the given number.
+- `Math.max(value, value1, ..., valueN)` returns the largest number or -Infinity if there is no arguments.
+- `Math.min(value, value1, ..., valueN)` returns the smallest number or Infinity if there is no arguments.
+- `Math.pow(base, exponent)` returns the value of a base raised to a power.
+- `Math.random()` returns a floating-point, pseudo-random number between 0(inclusive) and 1(exclusive).
+- `Math.round(value)` returns the value of a number rounds to the nearest integer.
+- `Math.sqrt(value)` returns the square root of a number.
+- `Math.trunc(value)` returns the the integer part of a number by removing any fractional digits.
+- `Math.E` 2.718
+- `Math.PI` 3.14159
+
+## Date
+
+Date object encapsulate an integral number that represents milliseconds since the midnight at the beginning of January, 1, 1970, UTC.
+
