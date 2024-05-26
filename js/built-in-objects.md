@@ -353,7 +353,7 @@ result is an array, and the value of result
 - `Object.create(proto, propertiesObject)` creates a new object using an existing object as the prototype of the newly created object. Return the created object. Throw error if proto is neither null nor an object.
 - `Object.defineProperties(obj, propDescriptorsObj)` defines new or modifies existing properties directly on an object. Return the object. propDescriptorsObj is an object contains property descriptors.
 - `Object.defineProperty(obj, prop, descriptor)` defines a new property or modifies an existing property directly on an object. Return the object. If configurable was false, then all modifies by using this method would throw a TypeError.
-- `Object.entries(obj)` returns an array of a given object's own enumerable **string-keyed** property key-value pairs. Non-object arguments are coerced to objects. undefined and null can't be coerced to objects and throw a TypeError upfront. Only strings may have own enumerable properties,while all other primitives return an empty array.
+- `Object.entries(obj)` returns an array of a given object's own enumerable string-keyed property key-value pairs. Non-object arguments are coerced to objects. undefined and null can't be coerced to objects and throw a TypeError upfront. Only strings may have own enumerable properties,while all other primitives return an empty array.
 - `Object.freeze(obj)` freezes an object that prevents extensions and makes existing properties non-writeable and non-configurable. Freeze is shallow. Return the same object. In strict mode any modify of a frozen object will cause a TypeError. Freezing a non-empty TypedArray or DataView will also cause a TypeError. Private properties do not have the concept of property descriptors, which means private properties of an frozen object still can be changed.
 - `Object.fromEntries(iterable)` transforms a list of key-value pairs(iterable) into an object. Return a new object. Iterable should be two-0element array-like object. It performs the reverse of `Object.entries()`, except that `Object.entries()` only returns string-keyed properties, while `Object.fromEntries()` can also create symbol-keyed properties.
 - `Object.getOwnPropertyDescriptor(obj, prop)` returns an object describing the configuration of a specific property on a given object. prop can be string or symbol, if not exist on the obj, undefined will be returned. A non-object first argument will coerced to an object at first. Those can't be coerced to an object will cause a TypeError.
@@ -371,6 +371,28 @@ result is an array, and the value of result
 - `Object.preventExtensions(obj)` prevents new properties from ever being added to the object. It also prevents the object's prototype from being re-assigned, while properties still can be added to the prototype. Return the same Object.
 - `Object.seal(obj)` seals an object that prevents extensions and makes own properties non-configurable. The object's properties can still be changed as long as they are writable. Return the same object.
 - `Object.setPrototypeOf(obj, prototype)` changes the object's prototype to another object or null. Return the same object. Throw TypeError, if the first arguments is null, undefined, or non-extensible. A very slow operation.
+- `Object.values(obj)` returns an array of the given object's own enumerable string-keyed property values.
+
+### instance methods
+
+- `Object.prototype.hasOwnProperty(prop)` returns a boolean indicates whether the object has the specific property as it's own property. No checking for prototype chain. Be careful about non-prototype object and overridden hasOwnProperty.
+- `Object.prototype.isPrototypeOf(obj)` checks if this object exists in another object's prototype chain.
+- `Object.prototype.propertyIsEnumerable(prop)` returns a boolean indicates whether the specific property is this object's own enumerable property. Most built-in properties are non-enumerable by default.
+- `Object.prototype.toLocaleString()` returns a string representing the object. This method is meant to be overridden by derived objects for locale-specific purposes. All objects inherit from Object.prototype inherit the toLocaleString method. Object's toLocaleString returns the result of calling this.toString().
+- `Object.prototype.toString()` returns a string representing this object. This method is meant to overridden by derived objects for custom type coerce logic.
+- `Object.prototype.valueOf()` converts an object to a primitive value. JavaScript automatically invokes it when encountering an object where a primitive value is expected.
+
+### instance properties
+
+- `Object.prototype.constructor` returns to the constructor function that created the instance object.
+
+### checking inherits
+
+Using instanceof key words to determine whether an object is instance of a class.
+
+### deleting a property from an object
+
+Using delete key words to delete a property.
 
 ### demos
 
@@ -399,3 +421,184 @@ const fruits = ["Apple", "Banana", "Watermelon", "Orange"];
 Object.hasOwn(fruits, 3); // true ('Orange')
 
 ```
+
+## Function
+
+### instance methods
+
+- `Function.prototype[Symbol.hasInstance](value)` specifies the default procedure for determining if a constructor function recognize an object as one of the constructor's instances. It is called by the instanceof operator.
+- `Function.prototype.apply(thisArg[, argsArray])` assigns an arbitrary value as this when calling an existing function.
+- `Function.prototype.call(thisArg[, arg1[, arg2[, ...[, argN]]]])`
+- `Function.prototype.bind(thisArg[, arg1[, arg2[, ...[, argN]]]])`
+- `Function.prototype.toString()`
+
+### instance properties
+
+- `Function: length` indicates the number of parameters expected by the function. The number excludes the reset parameter and only includes parameters before the fist one with a default value. By contrast, arguments.length is local to a function and provides the number of arguments actually passed to the function.
+- `Function: name` indicates the function's name as specified when it was created, or it may be 'anonymous' or '' for functions created anonymously. Return a string.
+- `Function: prototype`, when a function is called with new, the constructor's prototype property will become the resulting object's prototype.
+
+## Boolean
+
+### instance methods
+
+- `Boolean.prototype.toString()` overrides the Object.prototype.toString
+- `Boolean.prototype.valueOf()` overrides the Object.prototype.valueOf
+
+## Symbol
+
+### static methods
+
+- `Symbol.for(key)` creates a symbol available in a global symbol registry list. Checking the symbol with the given key is already present in the registry. In that case, that symbol is returned. If no symbol with the given key is found, symbol.for will create a new global symbol.
+- `Symbol.keyFor(sym)` retrieves a shared symbol key from the global symbol registry for the given symbol. Return the key or undefined.
+
+### static properties
+
+- `Symbol.asyncIterator`, the async iterable protocol looks up this symbol for the method that returns the async iterator for an object.
+- `Symbol.hasInstance`, the instanceof operator looks up this symbol on it's right-hand operand for the method used to determine if the constructor recognizes an object as instance.
+- `Symbol.isConcatSpreadable`, the `Array.prototype.concat()` method looks up this symbol on each object being concatenated to determine if it should be treated as an array-like object and flattened to its array elements.
+- `Symbol.iterator`, the iterable protocol looks up this symbol for the method that returns the iterator for an object.
+- `Symbol.match`, the `String.prototype.math()`
+- `Symbol.matchAll`
+- `Symbol.replace`
+- `Symbol.search`
+- `Symbol.species`
+- `Symbol.split`
+- `Symbol.toPrimitive`
+- `Symbol.toStringTag`
+- `Symbol.unscopables`
+
+### instance methods
+
+- `Symbol.prototype[Symbol.toPrimitive](hint)` returns the primitive value of a Symbol object.
+- `Symbol.prototype.toString()`
+- `Symbol.prototype.valueOf()`
+
+### instance properties
+
+- `Symbol.prototype.description` returns a string containing the description of this symbol or undefined.
+
+## Error
+
+### instance methods
+
+- `Error.prototype.toString()`
+
+```javascript
+
+Error.prototype.toString = function () {
+  if (
+    this === null ||
+    (typeof this !== "object" && typeof this !== "function")
+  ) {
+    throw new TypeError();
+  }
+  let name = this.name;
+  name = name === undefined ? "Error" : `${name}`;
+  let msg = this.message;
+  msg = msg === undefined ? "" : `${msg}`;
+  if (name === "") {
+    return msg;
+  }
+  if (msg === "") {
+    return name;
+  }
+  return `${name}: ${msg}`;
+};
+
+```
+
+### instance properties
+
+- `Error: cause`, instance indicates the specific original cause of the error.
+- `Error: message`, a human-readable description fo the error.
+- `Error.prototype.name` represents the name for the type of error.
+- `Error.prototype.stack`, non-standard, offers a trace of the call stack.
+
+## AggregateError
+
+### instance properties
+
+- `AggregateError: errors` contains an array representing errors that were aggregated.
+
+```javascript
+
+Promise.any([Promise.reject(new Error("some error"))]).catch((e) => {
+  console.log(e instanceof AggregateError); // true
+  console.log(e.message); // "All Promises rejected"
+  console.log(e.name); // "AggregateError"
+  console.log(e.errors); // [ Error: "some error" ]
+});
+
+```
+
+## EvalArray
+
+Not thrown by JavaScript anymore, just for compatible.
+
+## RangeError
+
+RangeError indicates an error when a value is not in the set or range of allowed values.
+
+```javascript
+
+function check(n) {
+  if (!(n >= -500 && n <= 500)) {
+    throw new RangeError("The argument must be between -500 and 500.");
+  }
+}
+
+check(1000)
+
+2.56234.toFixed(1000); // the argument of toFixed should between 0 and 100, out of the range, a RangeError thrown.
+
+```
+
+## ReferenceError
+
+ReferenceError represents an error when a variable that doesn't exist in the current scope referenced.
+
+```javascript
+
+let a = undefinedVariable;
+
+```
+
+## SyntaxError
+
+SyntaxError represents an error when trying to interpret syntactically invalid code.
+
+```javascript
+
+foo bar;
+
+```
+
+## TypeError
+
+TypeError represents an error when an operation could be performed, typically when a value is not of the expected type.
+
+```javascript
+
+null.fn();
+
+```
+
+## URIError
+
+URIError represents an error when a global URI handling function was used in a wrong way.
+
+```javascript
+
+decodeURIComponent('%')
+
+```
+
+## Number
+
+Number values represent floating-point number like 77 or -7.7. Number type is a [double-precision 64-bit binary format IEEE-754](https://en.wikipedia.org/wiki/Double-precision_floating-point_format)
+
+### static methods
+
+- `Number.isFinite(value)` determines whether the value is finite. Coerce first.
+- `
