@@ -355,7 +355,7 @@ result is an array, and the value of result
 - `Object.defineProperty(obj, prop, descriptor)` defines a new property or modifies an existing property directly on an object. Return the object. If configurable was false, then all modifies by using this method would throw a TypeError.
 - `Object.entries(obj)` returns an array of a given object's own enumerable string-keyed property key-value pairs. Non-object arguments are coerced to objects. undefined and null can't be coerced to objects and throw a TypeError upfront. Only strings may have own enumerable properties,while all other primitives return an empty array.
 - `Object.freeze(obj)` freezes an object that prevents extensions and makes existing properties non-writeable and non-configurable. Freeze is shallow. Return the same object. In strict mode any modify of a frozen object will cause a TypeError. Freezing a non-empty TypedArray or DataView will also cause a TypeError. Private properties do not have the concept of property descriptors, which means private properties of an frozen object still can be changed.
-- `Object.fromEntries(iterable)` transforms a list of key-value pairs(iterable) into an object. Return a new object. Iterable should be two-0element array-like object. It performs the reverse of `Object.entries()`, except that `Object.entries()` only returns string-keyed properties, while `Object.fromEntries()` can also create symbol-keyed properties.
+- `Object.fromEntries(iterable)` transforms a list of key-value pairs(iterable) into an object. Return a new object. Iterable should be two-element array-like object. It performs the reverse of `Object.entries()`, except that `Object.entries()` only returns string-keyed properties, while `Object.fromEntries()` can also create symbol-keyed properties.
 - `Object.getOwnPropertyDescriptor(obj, prop)` returns an object describing the configuration of a specific property on a given object. prop can be string or symbol, if not exist on the obj, undefined will be returned. A non-object first argument will coerced to an object at first. Those can't be coerced to an object will cause a TypeError.
 - `Object.getOwnPropertyDescriptors(obj)` returns all own property descriptors.
 - `Object.getOwnPropertyNames(obj)` returns an array of strings that corresponds to the own properties of the object.
@@ -375,7 +375,7 @@ result is an array, and the value of result
 
 ### instance methods
 
-- `Object.prototype.hasOwnProperty(prop)` returns a boolean indicates whether the object has the specific property as it's own property. No checking for prototype chain. Be careful about non-prototype object and overridden hasOwnProperty.
+- `Object.prototype.hasOwnProperty(prop)` returns a boolean indicates whether the object has the specific property as it's own property. No checking for prototype chain. Be careful about null-prototype object and overridden of hasOwnProperty.
 - `Object.prototype.isPrototypeOf(obj)` checks if this object exists in another object's prototype chain.
 - `Object.prototype.propertyIsEnumerable(prop)` returns a boolean indicates whether the specific property is this object's own enumerable property. Most built-in properties are non-enumerable by default.
 - `Object.prototype.toLocaleString()` returns a string representing the object. This method is meant to be overridden by derived objects for locale-specific purposes. All objects inherit from Object.prototype inherit the toLocaleString method. Object's toLocaleString returns the result of calling this.toString().
@@ -756,7 +756,8 @@ Date()
 
 ## String
 
-The String object is used to represent and manipulate a sequence of characters.
+The String object is used to represent and manipulate a sequence of characters. Strings are represented fundamentally as sequences of UTF-16 code units. This character set is called the basic multilingual plane(BMP), and includes the most common characters. Each code unit can be written in a string with `\u` followed by exactly four hex digits.
+
 
 ### String coercion
 
@@ -778,13 +779,34 @@ The String object is used to represent and manipulate a sequence of characters.
 ### Static methods
 
 - `String.formCharCode([num, num1, ..., numN])` returns a string. Arguments are integer numbers between 0 to 65535(0xFFFF) representing a UTF-16 code unit. Numbers greater than 0xFFFF are truncated to the last 16 bits. No validity checks are performed.
-- `String.formCodePoint([num, num1, ..., numN])` returns a string, Arguments are integer between 0 to 0x10FFFF(inclusive) representing a unicode point. Coerced to number first, not integer or out of range throw RangeError.
+- `String.formCodePoint([num, num1, ..., numN])` returns a string, Arguments are integer between 0 to 0x10FFFF(inclusive) representing a unicode point, that is to say may be tow code represent one character. Coerced to number first, not integer or out of range throw RangeError.
 - `String.raw(str, str1, ..., strN)` | String.raw`templateString` is a tag function of template literals. Substitutions are processed, but escape sequences (e.g. \n) are not.
 
 ### Instance methods
 
-- `String.prototype[Symbol.iterator]()` returns a
+- `String.prototype[Symbol.iterator]()` returns a iterator that yields the **Unicode code points** of the string value as individual strings.
+- `String.prototype.at(idx)` returns a new string contains the single UTF-16 code unit located at the specified offset, for out of range returns `undefined`. Position and negative idx are supported. negative idx counting back from the end of the string. e.g `'😆'.at(-1) '\uDE06'`
+- `String.prototype.charAt(idx)` returns as at(), but not support negative idx, and out of range returns an empty string. e.g `'😆'.charAt(1) '\uDE06'`
+- `String.prototype.charCodeAt(idx)` returns a integer between 0 and 65535 representing the UTF-16 code unit in the specific index. returns `NaN` if out of range. Only gets lone surrogate for char code greater than 65535. e.g `'😆'.charCodeAt(0) 55357`
+- `String.prototype.codePointAt(idx)` returns a non-negative integer that is the Unicode code point value of the character starting at the given index. At leading surrogate returns the code point of the surrogates pair. At trailing surrogate, returns only the trailing surrogate code unit. Out of range returns `NaN`. Note the index is still based on UTF-16 code units not Unicode code points. e.g `'😆'.codePointAt(0) 128518`
+- `String.prototype.concat([str, str1, ..., strN])` returns a new string containing the combined text of the strings provided. Same to string concatenation operation (+, +=), expect concat coerces its arguments directly to strings, while concatenation coerces its operands to primitives first.
+- `String.prototype.startsWith(searchString, position)` determines whether the string starts with the searchString. Regex searchString throw TypeError. Negative position allowed.
+- `String.prototype.endsWith(searchString, endPosition)` same as startsWith, but at end.
+- `String.prototype.includes(searchString, position)` same as startsWith, but include.
+- `String.prototype.indexOf(searchString, position)` same but returns the index of first occurrence. Regexes are allowed but coerced to string.
+- `String.prototype.lastIndexOf(searchString, position)`
+- `String.prototype.isWellFormed()` returns true if this string does not contain any lone surrogates, false otherwise. Checking for avoiding error in encodeURI.
+- `String.prototype.toWellFormed()` returns a new string with all lone surrogates replaced with the Unicode replacement character.
+- `String.prototype.match(regex)` returns an array whose contents depend on the presence or absence of the global(g) flag or null if no matches are found. Without g flag, only the first complete match and its related computing groups are returned that is same as the result of `RegExp.prototype.exec()`. With g flag, all complete match are returned, but including computing groups. example for groups `/(?<animal>fox|cat) jumps over/`
+- `String.prototype.matchAll(regex)` returns an iterable iterator object of matches or an empty iterator if no matches are found. Each value yielded by the iterator is an array with the same shape as the return value of `RegExp.prototype.exec()`. Flag g is required or TypeError throws. Better accessing to capturing the computing groups than match. To match all with exec, a while loop is needed to manipulating matches. Non-regex objects that implement `[Symbol.matchAll]()` can be consumed by matchAll.
+- `String.prototype.padEnd(targetLength, padString)` pads this string with a given string, so that the resulting string reaches the given length, and returns the padded string.
+- `String.prototype.padStart(targetLength, padString)`, same. Fixed length number string conversion.
+- `String.prototype.repeat(count)` returns a new string containing the specified count copies of the given string. Negative count or overflows maximum string length throw RangeError.
+- `String.prototype.replace(pattern, replacement)` returns a new replaced string. Pattern can be a string, or an object with a Symbol.replace method -- the typical example is Regex. Other type will be coerced to string. Replacement can be a string or function. As string has patterns: $$, $&, $`, $', $n, $<Name>. As function with signature ```function replacer(match, p1, p2, …, pN, offset, string, groups) {}```.
+- `String.prototype.normalize([form])` returns a string containing the Unicode normalization from of the given string. `form` values are `NFC`(default), `NFD`, `NFKC`, `NFKD`, non of these throw RangeError. Some characters may have two forms of Unicode code point, which may cause problem in string comparison, then this method is needed.
 
 ### Instance property
 
 - `String: length` returns the length of the string in UTF-16 code units.
+
+
