@@ -803,7 +803,7 @@ The String object is used to represent and manipulate a sequence of characters. 
 - `String.prototype.padEnd(targetLength, padString)` pads this string with a given string, so that the resulting string reaches the given length, and returns the padded string.
 - `String.prototype.padStart(targetLength, padString)`, same. Fixed length number string conversion.
 - `String.prototype.repeat(count)` returns a new string containing the specified count copies of the given string. Negative count or overflows maximum string length throw RangeError.
-- `String.prototype.replace(pattern, replacement)` returns a new string with the first match replaced. Pattern can be a string, or an object with a Symbol.replace method -- the typical example is Regex. Other type will be coerced to string. Replacement can be a string or function. As string has patterns: \$$, \$&, \$`, \$', \$n, \$<Name>. As function with signature ```function replacer(match, p1, p2, …, pN, offset, string, groups) {}```.
+- `String.prototype.replace(pattern, replacement)` returns a new string with the first match replaced. Pattern can be a string, or an object with a Symbol.replace method -- the typical example is Regex. Other type will be coerced to string. Replacement can be a string or function. As string has patterns: $$, $&, $`, $', $n, $<Name>. As function with signature ```function replacer(match, p1, p2, …, pN, offset, string, groups) {}```.
 - `String.prototype.replaceAll(pattern, replacement)` same as replace, but with all matches replaced. Regex should has g flag, or TypeError thrown.
 - `String.prototype.slice(idxStart[, idxEnd])` returns substring between the range. Negative index is allowed. NaN is treated as 0.
 - `String.prototype.substring(idxStart[, idxEnd])` same, except that negative indexes are treated as 0, and if idxStart is bigger than idxEnd, the method swipes the two arguments.
@@ -836,4 +836,112 @@ const newString = "abc12345#$*%".replace(/([^\d]*)(\d*)([^\w]*)/, replacer);
 console.log(newString); // abc - 12345 - #$*%
 
 ```
+
+## RegExp
+
+The RegExp is used to match string with a pattern.
+
+### Instance methods
+
+- `RegExp.prototype[Symbol.match]()`
+- `RegExp.prototype[Symbol.matchAll]()`
+- `RegExp.prototype[Symbol.split]()`
+- `RegExp.prototype[Symbol.replace]()`
+- `RegExp.prototype[Symbol.search]()`
+- `RegExp.prototype.exec(str)` executes a search with this regex for a match in the specific string returns a result arrays with match and computing groups: index, input, groups, indices(d flag is set). Returns null if non-match. With the global or the sticky flag set, the regex is stateful, it stores a lastIndex from the previous match. This method is a primitive method of RegExp, and others may call it.
+- `RegExp.prototype.test()`
+- `RegExp.prototype.toString()`
+
+### Instance properties
+
+- `RegExp.prototype.dotAll` whether s flag is set. If set then using `.` to match newline, e.g `\n`.
+- `RegExp.prototype.flags` returns all flag as a string.
+- `RegExp.prototype.global` whether g flag is set.
+- `RegExp.prototype.hasIndices` whether d flag is set.
+- `RegExp.prototype.ignoreCase` whether i flag is set.
+- `RegExp.prototype.multiline` whether m flag is set.
+- `RegExp.prototype.sticky` whether y flag is set. Y flag indicates only match at the index indicated by lastIndex.
+- `RegExp.prototype.unicode` whether u flag is set. U flag indicates match as unicode, or \u is equivalent as u. Surrogate pairs will be interpreted as whole character instead of two characters. LastIndex also advanced by Unicode code points instead of UTF-16 code units.
+- `RegExp.prototype.unicodeSets` whether v flag is set. Upgrading of u flag. Both u v set turns out SyntaxError.
+- `RegExp.prototype.source` returns a string containing the source text of the regex.
+- `RegExp: lastIndex` specifics the index at witch to start next match.
+
+## Array
+
+Array methods are always generic. This means that they can be invoked on array-liked objects as well.
+
+```javascript
+
+[]
+
+new Array([element1, element2, /* …, */ elementN])
+new Array(arrayLength)
+
+Array([element1, element2, /* …, */ elementN])
+Array(arrayLength)
+
+```
+
+For constructor only one number argument but non-length value thrown RangeError.
+
+### Static methods
+
+- `Array.from(arrayLike[, mapFn[, thisArg]])` creates a new shallow-copied array from an iterable(e.g Map, Set) or array-like(object with length and integer-keyed properties) object. The mapFn's signature is `function mapFn(element, index){}`. ThisArg is for mapFn. Returns a new array.
+- `Array.fromAsync(arrayLike[, mapFn[, thisArg]])` creates a new shallow-copied array from a async iterable, iterable, or array-like object. Returns a promise whose fulfillment value is an new array instance. This method is almost equivalent to Array.from in terms of behavior, except the following:
+  - Array.fromAsync() handles async iterable objects.
+  - Array.fromAsync() returns a Promise that fulfills to the array instance.
+  - If Array.fromAsync() is called with a non-async iterable object, each element to be added to the array is first awaited.
+  - If a mapFn is provided, its input and output are internally awaited.
+  Array.fromAsync() and Promise.all() can both turn an iterable of promises into a promise of an array. However, there are two key differences:
+  - Array.fromAsync() awaits each value yielded from the object sequentially. Promise.all() awaits all values concurrently.
+  - Array.fromAsync() iterates the iterable lazily, and doesn't retrieve the next value until the current one is settled. Promise.all() retrieves all values in advance and awaits them all.
+- `Array.isArray(value)`
+- `Array.of([ele, ele1, ..., eleN])`
+
+### Instances methods
+
+- `Array.prototype[@@iterator]()` implements the iterable protocol and allows arrays to be consumed by most syntaxes expecting iterables, such as the spread syntax and for...of loops. It returns an array iterator object that yields the value of each index in the array.
+- `Array.prototype.at(index)` returns matched element at the give index. Out of range of length returns `undefined` with any further ado. Same as literal notation `arr[idx]`.
+- `Array.prototype.concat([value, value1, ..., valueN])` concatenates into one new array with shallow-copy. Value is array or any type of data.
+- `Array.prototype.copyWithin(target, start[, end])` shallow copies part of this array to the target location in the same array without length modified, returns the same modified array. Negative position allowed.
+- `Array.prototype.fill(value[, start[, end]])` changes all elements within a range of indices in an array to a static value. Returns the same modified array.
+- `Array.prototype.entries()` returns a new iterable iterator object that contains the key-value pairs. When used on sparse arrays, iterators empty slots as if they have value of `undefined`.
+- `Array.prototype.keys()` same.
+- `Array.prototype.values()` same.
+- `Array.prototype.every(testFn[, thisArg])` tests whether all elements pass the testFn. Returns boolean value. The signature of the testFn is `function testFn(ele, idx, arr){}`. Not invoked for empty slots in sparse array. For empty arrays returns true.
+- `Array.prototype.some(textFn[, thisArg])` same, but at least one of the elements passed returns true.
+- `Array.prototype.find(testFn[, thisArg])` returns the first element passed the testFn. Otherwise, undefined is returned.
+- `Array.prototype.findIndex(testFn[, thisArg])` same, but returns index.
+- `Array.prototype.findLast(testFn[, thisArg])` iterates the array in reverse order and returns the first element passed the testFn.
+- `Array.prototype.findLastIndex(testFn[, thisArg])` same, but returns index.
+- `Array.prototype.filter(testFn[, thisArg])` returns a shallow copy of the given array containing just the elements passed the test.
+- `Array.prototype.flat([depth])` returns a new array with all sub-array elements concatenated into it recursively up to the specific depth, default is 1.
+- `Array.prototype.flatMap(fn[, thisArg])`returns a new array formed by applying the give fn function to each element of the array, and then flatten the array by one level.
+- `Array.prototype.forEach(fn[, thisArg])` executes the fn for each element once. Returns `undefined`.
+- `Array.prototype.map(fn[, thisArg])` returns a new array from the result of invoking fn on each element.
+- `Array.prototype.includes(searchEle[, fromIdx])` compares search element to each element using the SameValueZero algorithm.
+- `Array.prototype.indexOf(searchEle[, fromIdx])`return index.
+- `Array.prototype.lastIndexOf(searchEle[, fromIdx])`return index.
+- `Array.prototype.join([separator])` returns a string by concatenating all of the elements in this array, separated by comma or the specified separator string. If the array has only one single element, the element will be returned as string without using the separator. Elements with null or undefined value or empty slots are converted to empty strings.
+- `Array.prototype.pop()` removes the last element, and returns the element, `undefined` for empty array.
+- `Array.prototype.push([ele, ele1, ..., eleN])` adds the specified elements to the array, and returns the new length of the array.
+- `Array.prototype.shift()` same as pop, but the first element.
+- `Array.prototype.unShift([ele, ele1, ..., eleN])` same as push, but at the beginning.
+- `Array.prototype.reduce(reducerFn[, initialValue])` returns the value that results form running the reducerFn over the entire array. The signature of reducerFn is `function reducerFn(accumulator, currentValue, currentIndex, value){}`. If initialValue is specified, the reducerFn is executing with the first element of the array as currentValue, and accumulator initialized with the initialValue. Otherwise, the reducerFn is executing with the second element of the array as currentValue, and accumulator initialized with the first element.
+- `Array.prototype.reduceRight(reducerFn[, initialValue])` same, but reduce from right to left.
+- `Array.prototype.reverse()` reverses an array **in place**, returns the same array reversed.
+- `Array.prototype.toReversed()` same, but return a shallow copy and reversed array.
+- `Array.prototype.sort([compareFn])` sorts **in place**, returns the same array sorted. CompareFn gets two arguments a and b as conventional, and returns negative value for a should come before b, positive value for a should come after b, zero or NaN for a equals b.
+- `Array.prototype.toSorted([compareFn])` same, but returns a shallow copy and sorted array.
+- `Array.prototype.slice([start, end])` returns a new array containing shallow copy of elements between the range. Negative integer allowed.
+- `Array.prototype.splice(start[, deleteCount[, addingItem, addingItem1, ..., addingItemN]])` changes the contents of an array by removing or replacing and/or adding new elements **in place**. Returns a new array of deleted elements.
+- `Array.prototype.toSpliced(start[, deleteCount[,]])` same, but returns the shallow copy and modified array.
+- `Array.prototype.with(idx, value)` is the copying version of bracket notation to change the element value at the given index. Returns a new shallow copy and updated array.
+- `Array.prototype.toString()` calls join with separator as default internally, and returns the joined string.
+- `Array.prototype.toLocaleString()`
+
+### Instances properties
+
+- `Array: length` represents the number of elements in the array, a 32-bit integer. Set length will update the array.
+
 
