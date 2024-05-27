@@ -795,18 +795,45 @@ The String object is used to represent and manipulate a sequence of characters. 
 - `String.prototype.includes(searchString, position)` same as startsWith, but include.
 - `String.prototype.indexOf(searchString, position)` same but returns the index of first occurrence. Regexes are allowed but coerced to string.
 - `String.prototype.lastIndexOf(searchString, position)`
+- `String.prototype.search(regex)` returns the first match index. Non-regex coerced to regex by `new RegExp(regex)`. G flag has no effect on result.
 - `String.prototype.isWellFormed()` returns true if this string does not contain any lone surrogates, false otherwise. Checking for avoiding error in encodeURI.
 - `String.prototype.toWellFormed()` returns a new string with all lone surrogates replaced with the Unicode replacement character.
 - `String.prototype.match(regex)` returns an array whose contents depend on the presence or absence of the global(g) flag or null if no matches are found. Without g flag, only the first complete match and its related computing groups are returned that is same as the result of `RegExp.prototype.exec()`. With g flag, all complete match are returned, but including computing groups. example for groups `/(?<animal>fox|cat) jumps over/`
-- `String.prototype.matchAll(regex)` returns an iterable iterator object of matches or an empty iterator if no matches are found. Each value yielded by the iterator is an array with the same shape as the return value of `RegExp.prototype.exec()`. Flag g is required or TypeError throws. Better accessing to capturing the computing groups than match. To match all with exec, a while loop is needed to manipulating matches. Non-regex objects that implement `[Symbol.matchAll]()` can be consumed by matchAll.
+- `String.prototype.matchAll(regex)` returns an iterable iterator object of matches or an empty iterator if no matches are found. Each value yielded by the iterator is an array with the same shape as the return value of `RegExp.prototype.exec()`. Flag g is required or TypeError thrown. Better accessing to capturing the computing groups than match. To match all with exec, a while loop is needed to manipulating matches. Non-regex objects that implement `[Symbol.matchAll]()` can be consumed by matchAll.
 - `String.prototype.padEnd(targetLength, padString)` pads this string with a given string, so that the resulting string reaches the given length, and returns the padded string.
 - `String.prototype.padStart(targetLength, padString)`, same. Fixed length number string conversion.
 - `String.prototype.repeat(count)` returns a new string containing the specified count copies of the given string. Negative count or overflows maximum string length throw RangeError.
-- `String.prototype.replace(pattern, replacement)` returns a new replaced string. Pattern can be a string, or an object with a Symbol.replace method -- the typical example is Regex. Other type will be coerced to string. Replacement can be a string or function. As string has patterns: $$, $&, $`, $', $n, $<Name>. As function with signature ```function replacer(match, p1, p2, …, pN, offset, string, groups) {}```.
+- `String.prototype.replace(pattern, replacement)` returns a new string with the first match replaced. Pattern can be a string, or an object with a Symbol.replace method -- the typical example is Regex. Other type will be coerced to string. Replacement can be a string or function. As string has patterns: \$$, \$&, \$`, \$', \$n, \$<Name>. As function with signature ```function replacer(match, p1, p2, …, pN, offset, string, groups) {}```.
+- `String.prototype.replaceAll(pattern, replacement)` same as replace, but with all matches replaced. Regex should has g flag, or TypeError thrown.
+- `String.prototype.slice(idxStart[, idxEnd])` returns substring between the range. Negative index is allowed. NaN is treated as 0.
+- `String.prototype.substring(idxStart[, idxEnd])` same, except that negative indexes are treated as 0, and if idxStart is bigger than idxEnd, the method swipes the two arguments.
+- `String.prototype.split(separator[, limit])` returns an array of strings, split at each point where the separator occurs in the string, with a limit of array length. Separator can be undefined, string, object with `[Symbol.split]()` method, other objects coerced to strings. Undefined separator returns an array with the calling string as a single element. `''` empty string split the string by UTF-16 code units.
+- `String.prototype.trim()` removes whitespace from both ends of this string and returns the new string.
+- `String.prototype.trimStart()`
+- `String.prototype.trimEnd()`
+- `String.prototype.toUpperCase()`
+- `String.prototype.toLowerCase()`
+- `String.prototype.toLocaleUpperCase()`
+- `String.prototype.toLocaleLowerCase()`
+- `String.prototype.localeCompare(compareString[, locale[, options]])`
 - `String.prototype.normalize([form])` returns a string containing the Unicode normalization from of the given string. `form` values are `NFC`(default), `NFD`, `NFKC`, `NFKD`, non of these throw RangeError. Some characters may have two forms of Unicode code point, which may cause problem in string comparison, then this method is needed.
+- `String.prototype.toString()`
+- `String.prototype.valueOf()`
 
 ### Instance property
 
 - `String: length` returns the length of the string in UTF-16 code units.
 
+### Demos
+
+```javascript
+
+function replacer(match, p1, p2, p3, offset, string) {
+  // p1 is non-digits, p2 digits, and p3 non-alphanumerics
+  return [p1, p2, p3].join(" - ");
+}
+const newString = "abc12345#$*%".replace(/([^\d]*)(\d*)([^\w]*)/, replacer);
+console.log(newString); // abc - 12345 - #$*%
+
+```
 
