@@ -350,7 +350,7 @@ result is an array, and the value of result
 ### static methods
 
 - `Object.assign(target, source1, source2, ..., sourceN)` copies enumerable and own properties from the source object to a target object. Properties in the target object are overridden by properties in the sources if they have the same key. Later sources' properties overridden earlier ones. Return the target object.
-- `Object.create(proto, propertiesObject)` creates a new object using an existing object as the prototype of the newly created object. Return the created object. Throw error if proto is neither null nor an object.
+- `Object.create(proto, propDescriptorsObj)` creates a new object using an existing object as the prototype of the newly created object. Return the created object. Throw error if proto is neither null nor an object.
 - `Object.defineProperties(obj, propDescriptorsObj)` defines new or modifies existing properties directly on an object. Return the object. propDescriptorsObj is an object contains property descriptors.
 - `Object.defineProperty(obj, prop, descriptor)` defines a new property or modifies an existing property directly on an object. Return the object. If configurable was false, then all modifies by using this method would throw a TypeError.
 - `Object.entries(obj)` returns an array of a given object's own enumerable string-keyed property key-value pairs. Non-object arguments are coerced to objects. undefined and null can't be coerced to objects and throw a TypeError upfront. Only strings may have own enumerable properties,while all other primitives return an empty array.
