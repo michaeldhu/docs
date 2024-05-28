@@ -590,7 +590,7 @@ foo bar;
 
 ## TypeError
 
-TypeError represents an error when an operation could be performed, typically when a value is not of the expected type.
+TypeError represents an error when an operation could not be performed, typically when a value is not of the expected type.
 
 ```javascript
 
@@ -610,7 +610,7 @@ decodeURIComponent('%')
 
 ## Number
 
-Number values represent floating-point number like 77 or -7.7. Number type is a [double-precision 64-bit binary format IEEE-754](https://en.wikipedia.org/wiki/Double-precision_floating-point_format)
+Number values represent floating-point number like 77 or -7.7. Number type is a [double-precision 64-bit binary format IEEE-754](https://en.wikipedia.org/wiki/Double-precision_floating-point_format). Sign bit: 1 bit, Exponent: 11 bits, Mantissa: 52 bits.
 
 ### Static methods
 
