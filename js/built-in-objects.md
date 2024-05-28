@@ -944,4 +944,169 @@ For constructor only one number argument but non-length value thrown RangeError.
 
 - `Array: length` represents the number of elements in the array, a 32-bit integer. Set length will update the array.
 
+## TypedArray
 
+Almost same as Array. Except
+
+### Static properties
+
+- `TypedArray.BYTES_PER_ELEMENT`
+
+### Instances properties
+
+- `TypedArray.prototype.buffer` returns the ArrayBuffer or SharedArrayBuffer.
+- `TypedArray.prototype.byteLength` length in bytes.
+- `TypedArray.prototype.byteOffset` offset of the start of the buffer in bytes
+- `TypedArray.prototype.length` length in element.
+
+### Demos
+
+```javascript
+
+new Int8Array()
+new Int8Array(length)
+new Int8Array(typedArray)
+new Int8Array(object)
+
+new Int8Array(buffer)
+new Int8Array(buffer, byteOffset)
+new Int8Array(buffer, byteOffset, length)
+
+```
+
+## Map
+
+The Map object holds key-value pairs and remembers the original order of the keys. Any value may be used as either a key or a value.
+
+### Static methods
+
+- `Map.groupBy(items, groupFn)` returns a Map whose key is the value returned by groupFn, items have same return of groupFn concatenates to an array as value.
+
+### Instance methods
+
+- `Map.prototype[@@iterator]()`
+- `Map.prototype.clear()` removes all elements from this map.
+- `Map.prototype.delete(key)` removes the specified element from this map by key.
+- `Map.prototype.entries()` returns a iterable iterator object yielding key/value pairs as two-item array.
+- `Map.prototype.keys()` returns a iterable iterator object yielding each key of the map.
+- `Map.prototype.values()` returns a iterable iterator object yielding each value to the map.
+- `Map.prototype.forEach(fn[, thisArg])` executes the give function once per key/value pair in this map, in insertion order.
+- `Map.prototype.set(key, value)` sets or updates an element in this map with a specific key and a value.
+- `Map.prototype.get(key)` get value from this map with the specific key.
+- `Map.prototype.has(key)` determines whether an element with the specific key exists in this map.
+
+### Instance properties
+
+- `Map.prototype.size` returns the number of elements in this map.
+
+## Set
+
+The Set object stores **unique** values of any type. Value Equality is based on the SameValueZero algorithm.
+
+### Instance methods
+
+- `Set.prototype[@@iterator]()`
+- `Set.prototype.add(value)` inserts new element in this set.
+- `Set.prototype.delete(value)` removes a specific element in this set.
+- `Set.prototype.clear()` removes all elements in this set.
+- `Set.prototype.entries()` returns a iterable iterator object yielding with value/value pairs.
+- `Set.prototype.values()` returns a iterable iterator object yielding with value.
+- `Set.prototype.keys()` same to values.
+- `Set.prototype.forEach(fn[, thisArg])` executes the given fn once for each element in this set, in insertion order.
+- `Set.prototype.has(value)` determines whether an element with the specific value exists in this set.
+- `Set.prototype.
+
+### Instance properties
+
+- `Set.prototype.size` returns the number of elements in this map.
+
+## WeekMap
+
+WeekMap is almost same as Map, except its keys must be object or non-registered symbols, and does not create strong reference to its key, that is to say, the keys do not prevent from being garbage collected.
+
+### Instance Methods
+
+- `WeekMap.prototype.set()`
+- `WeekMap.prototype.get()`
+- `WeekMap.prototype.delete()`
+- `WeekMap.prototype.has()`
+
+## WeekSet
+
+Same as weekMap
+
+### Instance Methods
+
+- `WeekSet.prototype.add()`
+- `WeekSet.prototype.delete()`
+- `WeekSet.prototype.has()`
+
+## JSON
+
+The JSON namespace object contains static methods for parsing from and converting value to JavaScript Object Notation(JSON).
+
+### Static methods
+
+- `JSON.parse(text[, reviverFn])` parses a JSON string, returns object. If the string is not valid string, SyntaxError throws.
+- `JSON.stringify(value[, replacer[, space]])` converts a JavaScript object to a string. Throw TypeError if circular reference or BigInt encountered.
+
+## Iterator
+
+The Iterator object is an object that conforms to the iterator protocol by providing a next() method that returns an iterator result object.
+
+- `Iterator.prototype[@@iterator]()` makes the Iterator also a iterable object. Returns the value of this.
+
+## AsyncIterator
+
+The AsyncIterator object is an object that conforms to the async iterator protocol by providing a next() method that returns a promise fulfilling to an iterator result object.
+
+- `AsyncIterator.prototype[@@asyncIterator]()` makes the AsyncIterator also a async iterable object. Returns the value of this.
+
+## Promise
+
+The Promise object represents the eventual completion of an asynchronous operation and its resulting value.
+
+A promise is in one of these states:
+
+- pending: initial state, neither fulfilled nor rejected
+- fulfilled: the asynchronous operation was completed successfully.
+- rejected: the asynchronous was failed.
+
+### constructor
+
+```javascript
+
+new Promise((resolve, reject) => {})
+
+```
+
+### Static methods
+
+- `Promise.all(iterable)` throws TypeError if iterable is not iterable object, returns a promise and its state is as follows:
+  - Already fulfilled, if the iterable object is empty.
+  - Asynchronously fulfilled, when all the promises in the given iterable fulfill. The fulfillment value is an array of iterable fulfillment values.
+  - Asynchronously rejected, when any of the promises in the given iterable rejects. The rejection reason is the rejection reason of the first promise that was rejected.
+- `Promise.allSettled(iterable)` returns a promise fulfilled when all promises in the iterable settled (either fulfilled or rejected). The fulfillment value is an array of objects. Each object has the following properties:
+  - status: fulfilled or rejected.
+  - value: if the promise is fulfilled.
+  - reason: if the promise is rejected.
+- `Promise.any(iterable)`
+  - Already rejected, if the iterable passed is empty.
+  - Asynchronously fulfilled, when any of the promises in the given iterable fulfills.
+  - Asynchronously rejected, when all of the promises in the given iterable reject. The reject reason is an AggregateError.
+- `Promise.race(iterable)` return a promise asynchronously settled when the first of the promises in the iterable settles.
+- `Promise.reject(reason)` returns a promise rejected with the given reason.
+- `Promise.resolve(value)` returns a promise fulfilled with the given value.
+- `Promise.withResolvers()` returns an object containing properties: promise, resolve, reject.
+
+### Instance methods
+
+- `Promise.prototype.then(onFulfilled, onRejected)` returns a new pending promise immediately. OnFulfilled will be executed asynchronously when this promise fulfills, and is called with the fulfilled value as argument. If it is not a function, it is internally replaced with an identity function ((x) => x) which simply passes the fulfillment value forward. OnRejected will be executed asynchronously when this promise rejects, and is called with the rejected reason as argument. If it is not a function, it is internally replaced with a thrower function ((x) => { throw x; }) which throws the rejection reason it received. The new promise (p) state depends on rules as follows:
+  - returns a value: p gets fulfilled with the returned value as its value.
+  - doesn't return anything: p gets fulfilled with undefined as its value.
+  - throws an error: p gets rejected with the thrown error as its value.
+  - returns an already fulfilled promise: p gets fulfilled with that promise's value as its value.
+  - returns an already rejected promise: p gets rejected with that promise's value as its value.
+  - returns another pending promise: p is pending and becomes fulfilled/rejected with that promise's value as its value immediately after that promise becomes fulfilled/rejected.
+- `Promise.prototype.catch(onRejected)` returns a new pending promise immediately.
+- `Promise.prototype.finally(onFinally)` avoids duplicating code in onFulfilled an onRejected. Returns a new pending promise immediately. The onFinally will be called with no argument. If the onFinally throws an error of returns a rejected promise, the new promise will rejected with that reason. Otherwise, the new promise will settle with the same state as the current promise.
