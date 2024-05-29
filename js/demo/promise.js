@@ -1,89 +1,79 @@
 const STATE = {
   PENDING: "pending",
-  FUlFILLED: "fulfilled",
+  FULFILLED: "fulfilled",
   REJECTED: "rejected",
 };
 
 class MyPromise {
-  _state = STATE.PENDING;
-  _value = undefined;
-  _caches = [];
+  #state = STATE.PENDING;
+  #value = undefined;
+  #caches = [];
 
   constructor(fn) {
+    if (typeof fn !== "function")
+      throw new TypeError("Executor is not function.");
+
     try {
-      fn(this._resolve.bind(this), this._reject.bind(this));
+      fn(this.#resolve.bind(this), this.#reject.bind(this));
     } catch (e) {
-      this._reject(e);
+      this.#reject(e);
     }
   }
 
-  _resolve(value) {
-    if (this._state !== STATE.PENDING) return;
+  #resolve(value) {
+    if (this.#state !== STATE.PENDING) return;
+
     if (value === this)
       throw new TypeError("A promise cannot be resolved with itself.");
-    if (value instanceof MyPromise) {
-      value.then(this._resolve.bind(this), this._reject.bind(this));
-      return;
-    }
 
     if (
       (typeof value === "object" || typeof value === "function") &&
       typeof value.then === "function"
     ) {
       try {
-        value.then(this._resolve.bind(this), this._reject.bind(this));
+        value.then(this.#resolve.bind(this), this.#reject.bind(this));
       } catch (e) {
-        this._reject(e);
+        this.#reject(e);
       }
       return;
     }
 
-    this._state = STATE.FUlFILLED;
-    this._value = value;
-    this._handleCaches();
+    this.#state = STATE.FUlFILLED;
+    this.#value = value;
+    this.#handleCaches();
   }
 
-  _reject(reason) {
-    if (this._state !== STATE.PENDING) return;
-    this._state = STATE.REJECTED;
-    this._value = reason;
-    this._handleCaches();
+  #reject(reason) {
+    if (this.#state !== STATE.PENDING) return;
+    this.#state = STATE.REJECTED;
+    this.#value = reason;
+    this.#handleCaches();
   }
 
-  _handleCaches() {
-    this._caches.forEach((handler) => {
-      this._handle(...handler);
-    });
-    this._caches = [];
-    console.log(this);
+  #handleCaches() {
+    this.#caches.forEach((handler) => this.#handle(...handler));
+    this.#caches = [];
   }
 
-  _handle(onFulfilled, onRejected, resolve, reject) {
-    if (this._state === STATE.PENDING) {
-      this._caches.push([onFulfilled, onRejected, resolve, reject]);
+  #handle(onFulfilled, onRejected, resolve, reject) {
+    if (this.#state === STATE.PENDING) {
+      this.#caches.push([onFulfilled, onRejected, resolve, reject]);
       return;
     }
 
     const task = () => {
       try {
-        const cb = this._state === STATE.FUlFILLED ? onFulfilled : onRejected;
-        resolve(cb(this._value));
+        const cb = this.#state === STATE.FUlFILLED ? onFulfilled : onRejected;
+        resolve(cb(this.#value));
       } catch (e) {
         reject(e);
       }
     };
 
     queueMicrotask(task);
-    // setTimeout(task, 0);
   }
 
   then(onFulfilled, onRejected) {
-    let resolve, reject;
-    const promise = new MyPromise((rs, rj) => {
-      resolve = rs;
-      reject = rj;
-    });
-
     if (typeof onFulfilled !== "function") {
       onFulfilled = (value) => value;
     }
@@ -94,7 +84,9 @@ class MyPromise {
       };
     }
 
-    this._handle(onFulfilled, onRejected, resolve, reject);
+    const { promise, resolve, reject } = this.constructor.withResolvers();
+
+    this.#handle(onFulfilled, onRejected, resolve, reject);
 
     return promise;
   }
@@ -105,94 +97,93 @@ class MyPromise {
 
   finally(onFinally) {
     return this.then(
-      (value) => Promise.resolve(onFinally()).then(() => value),
+      (value) => this.constructor.resolve(onFinally()).then(() => value),
       (reason) =>
-        Promise.resolve(onFinally()).then(() => {
+        this.constructor.resolve(onFinally()).then(() => {
           throw reason;
         })
     );
   }
 
   static resolve(value) {
-    return new MyPromise((resolve) => resolve(value));
+    return new this((resolve) => resolve(value));
   }
 
   static reject(reason) {
-    return new MyPromise((resolve, reject) => reject(reason));
+    return new this((resolve, reject) => reject(reason));
+  }
+
+  static #handleIterable(iterable, executor) {
+    checkIterable(iterable);
+    const arr = [...iterable];
+    if (!arr.length) return this.resolve(arr);
+
+    return new this(executor.bind(null, arr));
   }
 
   static all(iterable) {
-    const arr = [...iterable];
-    if (!arr.length) return Promise.resolve(arr);
-
-    return new Promise((resolve, reject) => {
-      let count = 0;
-      for (let i = 0, len = arr.length; i < len; i++) {
-        Promise.resolve(arr[i]).then(
-          value => {
-            arr[i] = value;
-            if (++count === len) {
-              resolve(arr);
-            }
+    return this.#handleIterable(iterable, (arr, resolve, reject) => {
+      let count = 0, len = arr.length;
+      arr.forEach((item, idx) => {
+        this.resolve(item).then(
+          (value) => {
+            arr[idx] = value;
+            if (++count === len) resolve(arr);
           },
-          reason => reject(reason),
-        );
-      }
+          (reason) => reject(reason)
+        )
+      });
     });
   }
 
   static allSettled(iterable) {
-    const arr = [...iterable];
-    if (!arr.length) return Promise.resolve(arr);
-
-    return new Promise((resolve) => {
+    return this.#handleIterable(iterable, (arr, resolve) => {
       let count = 0, len = arr.length;
       arr.forEach((item, idx) => {
-        Promise.resolve(item).then((value) => {
-          arr[idx] = {
-            status: STATE.FUlFILLED,
-            value,
-          }
-        }, (reason) => {
-          arr[idx] = {
-            status: STATE.REJECTED,
-            reason,
-          }
-        }).finally(() => {
-          if (++count === len) {
-            resolve(arr);
-          }
+        this.resolve(item).then(
+          (value) => arr[idx] = { status: STATE.FUlFILLED, value },
+          (reason) => arr[idx] = { status: STATE.REJECTED, reason }
+        ).finally(() => {
+          if (++count === len) resolve(arr);
         })
-      })
+      });
     });
   }
 
   static any(iterable) {
-    const arr = [...iterable];
-    if (!arr.length) return Promise.resolve(arr);
-
-    return new Promise((resolve, reject) => {
-      let count = 0;
-      for (let i = 0, len = arr.length; i < len; i++) {
-        Promise.resolve(arr[i]).then(
-          value => resolve(value),
-          reason => {
-            arr[i] = reason;
-            if (++count === len) {
-              reject(new AggregateError(arr));
-            }
-          },
-        );
-      }
+    return this.#handleIterable(iterable, (arr, resolve, reject) => {
+      let count = 0, len = arr.length;
+      arr.forEach((item, idx) => {
+        this.resolve(item).then(
+          (value) => resolve(value),
+          (reason) => {
+            arr[idx] = reason;
+            if (++count === len) reject(new AggregateError(arr, 'All promises were rejected.'));
+          }
+        )
+      });
     });
   }
 
   static race(iterable) {
-    return new Promise((resolve, reject) => {
-      Array.prototype.forEach.call(iterable, (item) => {
-        Promise.resolve(item).then(resolve, reject);
-      });
+    checkIterable(iterable);
+    return new this((resolve, reject) => {
+      [...iterable].forEach((item) => this.resolve(item).then(resolve, reject))
     });
+  }
+
+  static withResolvers() {
+    let resolve, reject;
+    const promise = new this((rs, rj) => {
+      (resolve = rs), (reject = rj);
+    });
+    return { promise, resolve, reject };
+  }
+}
+
+function checkIterable(value) {
+  if (!value || typeof value[Symbol.iterator] !== "function") {
+    throw new TypeError(`${typeof value} is not iterable.`);
   }
 }
 
@@ -220,20 +211,48 @@ console.log("test start");
 //   }
 // );
 
-function newP() {
-  return new MyPromise((resolve, reject) => {
-    const range = 2000;
-    const delay = Math.floor(Math.random() * range);
+/* ------- all, allSettled, any, race ------- */
+// function newP() {
+//   return new MyPromise((resolve, reject) => {
+//     const range = 2000;
+//     const delay = Math.floor(Math.random() * range);
 
-    setTimeout(() => (delay < range / 2 ? resolve(delay) : reject(new Error(delay))), delay);
-    // setTimeout(() => resolve(delay), delay);
-  });
-}
+//     // setTimeout(() => (delay > range / 2 ? resolve(delay) : reject(new Error(delay))), delay);
+//     setTimeout(() => reject(delay), delay);
+//   });
+// }
 
-MyPromise.race([newP(), newP(), newP()]).then((value) => {
-  console.info('resolved', value)
-}, (reason) => {
-  console.info('rejected', reason)
-})
+// const p = MyPromise.race([newP(), newP(), newP(), MyPromise.reject(123)])
+// p.then((value) => {
+//   console.log('resolved', value)
+// }, (reason) => {
+//   console.log('rejected', reason)
+// })
+
+// setTimeout(() => console.log('iterable promise', p), 2000)
+
+/* ------- thenable ------- */
+// new MyPromise((resolve, reject) => {
+//   const p = new Promise((rs, rj) => {
+//     setTimeout(() => {
+//       rj(new Error(110));
+//     }, 1000)
+//   }).then((value) => {
+//     console.log('promise resolved');
+//     return value;
+//   });
+
+//   resolve(p);
+// }).then((value) => {
+//   console.log('my promise resolved then', value)
+// }, reason => {
+//   console.log('my promise rejected', reason)
+// });
+
+/* ------- non-iterable ------- */
+
+// checkIterable(undefined);
+
+console.log([...new Map([['a', 2], ['b', 4]])]);
 
 console.log("test end");
