@@ -118,58 +118,60 @@ class MyPromise {
     const arr = [...iterable];
     if (!arr.length) return this.resolve(arr);
 
-    return new this(executor.bind(null, arr));
+    let count = 0, len = arr.length;
+    return new this(executor.bind(null, arr, count, len));
   }
 
   static all(iterable) {
-    return this.#handleIterable(iterable, (arr, resolve, reject) => {
-      let count = 0, len = arr.length;
-      arr.forEach((item, idx) => {
-        this.resolve(item).then(
-          (value) => {
-            arr[idx] = value;
-            if (++count === len) resolve(arr);
-          },
-          (reason) => reject(reason)
-        )
-      });
-    });
+    return this.#handleIterable(iterable, (arr, count, len, resolve, reject) => {
+        arr.forEach((item, idx) => {
+          this.resolve(item).then(
+            (value) => {
+              arr[idx] = value;
+              if (++count === len) resolve(arr);
+            },
+            (reason) => reject(reason)
+          );
+        });
+      }
+    );
   }
 
   static allSettled(iterable) {
-    return this.#handleIterable(iterable, (arr, resolve) => {
-      let count = 0, len = arr.length;
+    return this.#handleIterable(iterable, (arr, count, len, resolve) => {
       arr.forEach((item, idx) => {
-        this.resolve(item).then(
-          (value) => arr[idx] = { status: STATE.FUlFILLED, value },
-          (reason) => arr[idx] = { status: STATE.REJECTED, reason }
-        ).finally(() => {
-          if (++count === len) resolve(arr);
-        })
+        this.resolve(item)
+          .then(
+            (value) => (arr[idx] = { status: STATE.FULFILLED, value }),
+            (reason) => (arr[idx] = { status: STATE.REJECTED, reason })
+          )
+          .finally(() => ++count === len && resolve(arr));
       });
     });
   }
 
   static any(iterable) {
-    return this.#handleIterable(iterable, (arr, resolve, reject) => {
-      let count = 0, len = arr.length;
-      arr.forEach((item, idx) => {
-        this.resolve(item).then(
-          (value) => resolve(value),
-          (reason) => {
-            arr[idx] = reason;
-            if (++count === len) reject(new AggregateError(arr, 'All promises were rejected.'));
-          }
-        )
-      });
-    });
+    return this.#handleIterable(iterable, (arr, count, len, resolve, reject) => {
+        arr.forEach((item, idx) => {
+          this.resolve(item).then(
+            (value) => resolve(value),
+            (reason) => {
+              arr[idx] = reason;
+              if (++count === len) {
+                reject(new AggregateError(arr, "all rejected"));
+              }
+            }
+          );
+        });
+      }
+    );
   }
 
   static race(iterable) {
     checkIterable(iterable);
-    return new this((resolve, reject) => {
+    return new this((resolve, reject) =>
       [...iterable].forEach((item) => this.resolve(item).then(resolve, reject))
-    });
+    );
   }
 
   static withResolvers() {
@@ -212,22 +214,22 @@ console.log("test start");
 // );
 
 /* ------- all, allSettled, any, race ------- */
-// function newP() {
-//   return new MyPromise((resolve, reject) => {
-//     const range = 2000;
-//     const delay = Math.floor(Math.random() * range);
+function newP() {
+  return new MyPromise((resolve, reject) => {
+    const range = 2000;
+    const delay = Math.floor(Math.random() * range);
 
-//     // setTimeout(() => (delay > range / 2 ? resolve(delay) : reject(new Error(delay))), delay);
-//     setTimeout(() => reject(delay), delay);
-//   });
-// }
+    setTimeout(() => (delay > range / 2 ? resolve(delay) : reject(new Error(delay))), delay);
+    // setTimeout(() => reject(delay), delay);
+  });
+}
 
-// const p = MyPromise.race([newP(), newP(), newP(), MyPromise.reject(123)])
-// p.then((value) => {
-//   console.log('resolved', value)
-// }, (reason) => {
-//   console.log('rejected', reason)
-// })
+const p = MyPromise.allSettled([newP(), newP(), newP()])
+p.then((value) => {
+  console.log('resolved', value)
+}, (reason) => {
+  console.log('rejected', reason)
+})
 
 // setTimeout(() => console.log('iterable promise', p), 2000)
 
@@ -253,6 +255,11 @@ console.log("test start");
 
 // checkIterable(undefined);
 
-console.log([...new Map([['a', 2], ['b', 4]])]);
+// console.log([
+//   ...new Map([
+//     ["a", 2],
+//     ["b", 4],
+//   ]),
+// ]);
 
 console.log("test end");
