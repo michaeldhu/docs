@@ -1110,3 +1110,93 @@ new Promise((resolve, reject) => {})
   - returns another pending promise: p is pending and becomes fulfilled/rejected with that promise's value as its value immediately after that promise becomes fulfilled/rejected.
 - `Promise.prototype.catch(onRejected)` returns a new pending promise immediately.
 - `Promise.prototype.finally(onFinally)` avoids duplicating code in onFulfilled an onRejected. Returns a new pending promise immediately. The onFinally will be called with no argument. If the onFinally throws an error of returns a rejected promise, the new promise will rejected with that reason. Otherwise, the new promise will settle with the same state as the current promise.
+
+## GeneratorFunction
+
+The GeneratorFunction object provides methods for generator functions. In JavaScript, every generator function is actually a GeneratorFunction object.
+
+GeneratorFunction is a subclass of Function.
+
+```javascript
+
+const GeneratorFunction = function* () {}.constructor;
+
+```
+
+## AsyncGeneratorFunction
+
+The AsyncGeneratorFunction object provides methods for async generator functions. In JavaScript, every async generator function is actually a AsyncGeneratorFunction object.
+
+AsyncGeneratorFunction is a subclass of Function.
+
+```javascript
+
+const AsyncGeneratorFunction = async function* () {}.constructor;
+
+```
+
+## Generator
+
+The  Generator object is returned by a generator function and it conforms both the iterable protocol and the iterator protocol.
+
+Generator is the subclass of hidden Iterator object.
+
+```javascript
+
+function* generator() {
+  yield 1;
+  yield 2;
+  yield 3;
+}
+
+const gen = generator(); // "Generator { }"
+
+```
+
+### Instance methods
+
+- `Generator.prototype.next([value])` returns an object of two properties done and value. While the value parameter will be assigned as the result of the yield expression.
+  - done: boolean. true if the generator is past the end of its control flow, otherwise false. if true the prospect value is undefined in most cases.
+  - value: any arbitrary value yielded or returned by the generator.
+- `Generator.prototype.return([value])` acts as if a return statement is inserted in the generator's function body at the current suspended position, which finishes the generator and allows the generator to perform any cleanup tasks when combined with a try...finally block.
+- `Generator.prototype.throw(exception)` acts as if a throw statement is inserted in the generator's function body at the current suspended position, which informs the generator of an error condition and allows it to handle the error, or perform cleanup and close itself.
+
+```javascript
+function* gen() {
+  yield 1;
+  try {
+    yield 2;
+    yield 3;
+  } catch (e) {
+    console.log('error caught!')
+  } finally {
+    yield "cleanup";
+  }
+}
+
+const g1 = gen();
+g1.next(); // { value: 1, done: false }
+
+// Execution is suspended before the try...finally.
+g1.return("early return"); // { value: 'early return', done: true }
+
+const g2 = gen();
+g2.next(); // { value: 1, done: false }
+g2.next(); // { value: 2, done: false }
+
+// Execution is suspended within the try...finally.
+g2.return("early return"); // { value: 'cleanup', done: false }
+
+// The completion value is preserved
+g2.next(); // { value: 'early return', done: true }
+
+// Generator is in the completed state
+g2.return("not so early return"); // { value: 'not so early return', done: true }
+
+const g = gen();
+g2.next(); // { value: 1, done: false }
+g2.next(); // { value: 2, done: false }
+g.throw(new Error("Something went wrong"));
+// "Error caught!"
+// { value: 42, done: false }
+```
