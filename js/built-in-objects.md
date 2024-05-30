@@ -758,7 +758,6 @@ Date()
 
 The String object is used to represent and manipulate a sequence of characters. Strings are represented fundamentally as sequences of UTF-16 code units. This character set is called the basic multilingual plane(BMP), and includes the most common characters. Each code unit can be written in a string with `\u` followed by exactly four hex digits.
 
-
 ### String coercion
 
 - Strings returned as-is.
@@ -1200,3 +1199,44 @@ g.throw(new Error("Something went wrong"));
 // "Error caught!"
 // { value: 42, done: false }
 ```
+
+## AsyncGenerator
+
+The AsyncGenerator object is returned by an async generator function and it conforms to both the async iterable protocol and the async iterator protocol.
+
+Async generator methods always yield Promise objects.
+
+AsyncGenerator is a subclass of the hidden AsyncIterator class.
+
+```javascript
+
+async function* createAsyncGenerator() {
+  yield await Promise.resolve(1);
+  yield await Promise.resolve(2);
+  yield await Promise.resolve(3);
+}
+const asyncGen = createAsyncGenerator();
+asyncGen.next().then((res) => console.log(res.value)); // 1
+asyncGen.next().then((res) => console.log(res.value)); // 2
+asyncGen.next().then((res) => console.log(res.value)); // 3
+
+```
+
+### Instance methods
+
+Same returns a promise, the resolve value is same as Generator.
+
+- `Generator.prototype.next([value])`
+- `Generator.prototype.return([value])`
+- `Generator.prototype.throw(exception)`
+
+## AsyncFunction
+
+The AsyncFunction object provides methods for async functions. In JavaScript, every async function is actually an AsyncFunction object.
+
+```javascript
+
+const AsyncFunction = async function () {}.constructor;
+
+```
+

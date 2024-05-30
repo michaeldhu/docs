@@ -167,27 +167,9 @@ function checkIterable(value) {
 
 console.log("test start");
 
-// const p = new MyPromise((resolve, reject) => {
-//   setTimeout(() => reject(100), 1000);
-// });
-
-// const p2 = p.then(() => "p2");
-
-// const p3 = new MyPromise((resolve, reject) => {
-//   setTimeout(() => {
-//     console.log("try resolve p3");
-//     resolve(p);
-//   }, 100);
-// }).then(
-//   () => {
-//     console.log("p3 resolved");
-//     return "p3 resolved";
-//   },
-//   () => {
-//     console.log("p3 rejected");
-//     return "p3 rejection handled";
-//   }
-// );
+// const p0 = new MyPromise((resolve, reject) => {
+//   setTimeout(() => resolve(100), 1000);
+// }).then(value => console.log('resolved', value))
 
 /* ------- all, allSettled, any, race ------- */
 function newP() {
@@ -195,47 +177,17 @@ function newP() {
     const range = 2000;
     const delay = Math.floor(Math.random() * range);
 
-    setTimeout(() => (delay > range / 2 ? resolve(delay) : reject(new Error(delay))), delay);
-    // setTimeout(() => reject(delay), delay);
+    // setTimeout(() => (delay > range / 2 ? resolve(delay) : reject(new Error(delay))), delay);
+    setTimeout(() => resolve(delay), delay);
   });
 }
 
-const p = MyPromise.allSettled([newP(), newP(), newP()])
+const p = MyPromise.all([newP(), newP(), newP()])
+
 p.then((value) => {
   console.log('resolved', value)
 }, (reason) => {
   console.log('rejected', reason)
 })
-
-// setTimeout(() => console.log('iterable promise', p), 2000)
-
-/* ------- thenable ------- */
-// new MyPromise((resolve, reject) => {
-//   const p = new Promise((rs, rj) => {
-//     setTimeout(() => {
-//       rj(new Error(110));
-//     }, 1000)
-//   }).then((value) => {
-//     console.log('promise resolved');
-//     return value;
-//   });
-
-//   resolve(p);
-// }).then((value) => {
-//   console.log('my promise resolved then', value)
-// }, reason => {
-//   console.log('my promise rejected', reason)
-// });
-
-/* ------- non-iterable ------- */
-
-// checkIterable(undefined);
-
-// console.log([
-//   ...new Map([
-//     ["a", 2],
-//     ["b", 4],
-//   ]),
-// ]);
 
 console.log("test end");
