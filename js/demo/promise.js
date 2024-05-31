@@ -97,7 +97,7 @@ class MyPromise {
     return new this((resolve) => resolve(value));
   }
 
-  static reject(reason) {;
+  static reject(reason) {
     return new this((rs, reject) => reject(reason));
   }
 
@@ -146,10 +146,7 @@ class MyPromise {
   }
 
   static race(iterable) {
-    return new this((resolve, reject) => [...iterable].forEach(item => this.resolve(item).then(
-      (value) => resolve(value),
-      (reason) => reject(reason)
-    )));
+    return new this((resolve, reject) => [...iterable].forEach(item => this.resolve(item).then(resolve, reject)));
   }
 
   static withResolvers() {

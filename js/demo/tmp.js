@@ -1,8 +1,8 @@
 const STATE = {
   PENDING: 'pending',
   FULFILLED: 'fulfilled',
-  REJECTED: 'rejected',
-}
+  REJECTED: 'rejected'
+};
 
 class MyPromise {
   #state = STATE.PENDING;
@@ -59,7 +59,7 @@ class MyPromise {
         const cb = this.#state === STATE.FULFILLED ? onFulfilled : onRejected;
         resolve(cb(this.#value));
       } catch (e) {
-        reject(e)
+        reject(e);
       }
     };
 
@@ -97,7 +97,7 @@ class MyPromise {
     return new this((resolve) => resolve(value));
   }
 
-  static reject(reason) {;
+  static reject(reason) {
     return new this((rs, reject) => reject(reason));
   }
 
@@ -106,12 +106,11 @@ class MyPromise {
     const arr = [...iterable];
     if (!arr.length) return this.resolve(arr);
 
-    return new this(executor.bind(null, arr));
+    return new this(executor.bind(null, arr, 0, arr.length));
   }
 
   static all(iterable) {
-    return this.#handleIterable(iterable, (arr, resolve, reject) => {
-      let count = 0, len = arr.length;
+    return this.#handleIterable(iterable, (arr, count, len, resolve, reject) => {
       arr.forEach((item, idx) => this.resolve(item).then(
         (value) => {
           arr[idx] = value;
@@ -123,33 +122,29 @@ class MyPromise {
   }
 
   static allSettled(iterable) {
-    return this.#handleIterable(iterable, (arr, resolve) => {
-      let count = 0, len = arr.length;
+    return this.#handleIterable(iterable, (arr, count, len, resolve) => {
       arr.forEach((item, idx) => this.resolve(item).then(
         (value) => (arr[idx] = { status: STATE.FULFILLED, value }),
-        (reason) => (arr[idx] = { status: STATE.REJECTED, reason }),
-      ).finally(() => (++count === len && resolve(arr))))
+        (reason) => (arr[idx] = { status: STATE.REJECTED, reason })
+      ).finally(() => (++count === len && resolve(arr))));
     });
   }
 
   static any(iterable) {
-    return this.#handleIterable(iterable, (arr, resolve, reject) => {
-      let count = 0, len = arr.length;
+    return this.#handleIterable(iterable, (arr, count, len, resolve, reject) => {
       arr.forEach((item, idx) => this.resolve(item).then(
         (value) => resolve(value),
         (reason) => {
           arr[idx] = reason;
           if (++count === len) reject(new AggregateError(arr));
         }
-      ))
+      ));
     });
   }
 
   static race(iterable) {
-    return new this((resolve, reject) => [...iterable].forEach(item => this.resolve(item).then(
-      (value) => resolve(value),
-      (reason) => reject(reason)
-    )));
+    checkIterable(iterable);
+    return new this((resolve, reject) => [...iterable].forEach(item => this.resolve(item).then(resolve, reject)));
   }
 
   static withResolvers() {
@@ -164,30 +159,3 @@ function checkIterable(value) {
     throw new TypeError(`${typeof value} is not iterable`);
   }
 }
-
-console.log("test start");
-
-// const p0 = new MyPromise((resolve, reject) => {
-//   setTimeout(() => resolve(100), 1000);
-// }).then(value => console.log('resolved', value))
-
-/* ------- all, allSettled, any, race ------- */
-function newP() {
-  return new MyPromise((resolve, reject) => {
-    const range = 2000;
-    const delay = Math.floor(Math.random() * range);
-
-    // setTimeout(() => (delay > range / 2 ? resolve(delay) : reject(new Error(delay))), delay);
-    setTimeout(() => resolve(delay), delay);
-  });
-}
-
-const p = MyPromise.all([newP(), newP(), newP()])
-
-p.then((value) => {
-  console.log('resolved', value)
-}, (reason) => {
-  console.log('rejected', reason)
-})
-
-console.log("test end");
