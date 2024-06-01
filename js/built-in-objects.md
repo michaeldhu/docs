@@ -1239,4 +1239,3 @@ The AsyncFunction object provides methods for async functions. In JavaScript, ev
 const AsyncFunction = async function () {}.constructor;
 
 ```
-

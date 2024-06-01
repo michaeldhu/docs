@@ -1,3 +1,96 @@
+// function* gen() {
+//   console.log('start');
+//   console.log('start');
+//   const a = yield 1;
+//   console.log('a', a);
+
+//   try {
+//     console.log('try');
+//     const b = yield 2;
+//     console.log('b', b);
+//   } catch (e) {
+//     console.log('e', e);
+//   } finally {
+//     console.log('clean up');
+//   }
+
+//   try {
+//     console.log('try');
+//     const c = yield 3;
+//     console.log('c', c);
+//   } catch (e) {
+//     console.log('e', e);
+//   } finally {
+//     console.log('clean up');
+//   }
+
+//   yield 4;
+
+//   return 5;
+// }
+
+// async function* agen() {
+//   console.log('start');
+//   console.log('start');
+//   const a = yield await 1;
+//   console.log('a', a);
+
+//   try {
+//     console.log('try');
+//     const b = yield await 2;
+//     console.log('b', b);
+//   } catch (e) {
+//     console.log('e', e);
+//   } finally {
+//     console.log('clean up');
+//   }
+
+//   try {
+//     console.log('try');
+//     const c = yield await 3;
+//     console.log('c', c);
+//   } catch (e) {
+//     console.log('e', e);
+//   } finally {
+//     console.log('clean up');
+//   }
+
+//   yield await 4;
+
+//   return await 5;
+// }
+
+// async function asyncAwait() {
+//   console.log('start');
+//   console.log('start');
+//   const a = await 1;
+//   console.log('a', a);
+
+//   try {
+//     console.log('try');
+//     const b = await 2;
+//     console.log('b', b);
+//   } catch (e) {
+//     console.log('e', e);
+//   } finally {
+//     console.log('clean up');
+//   }
+
+//   try {
+//     console.log('try');
+//     const c = await 3;
+//     console.log('c', c);
+//   } catch (e) {
+//     console.log('e', e);
+//   } finally {
+//     console.log('clean up');
+//   }
+
+//   await 4;
+
+//   return await 5;
+// }
+
 function _typeof(o) {
   "@babel/helpers - typeof";
   return (
@@ -16,6 +109,31 @@ function _typeof(o) {
           }),
     _typeof(o)
   );
+}
+function asyncGeneratorStep(n, t, e, r, o, a, c) {
+  try {
+    var i = n[a](c),
+      u = i.value;
+  } catch (n) {
+    return void e(n);
+  }
+  i.done ? t(u) : Promise.resolve(u).then(r, o);
+}
+function _asyncToGenerator(n) {
+  return function () {
+    var t = this,
+      e = arguments;
+    return new Promise(function (r, o) {
+      var a = n.apply(t, e);
+      function _next(n) {
+        asyncGeneratorStep(a, r, o, _next, _throw, "next", n);
+      }
+      function _throw(n) {
+        asyncGeneratorStep(a, r, o, _next, _throw, "throw", n);
+      }
+      _next(void 0);
+    });
+  };
 }
 function _regeneratorRuntime() {
   "use strict";
@@ -36,7 +154,6 @@ function _regeneratorRuntime() {
     a = i.iterator || "@@iterator",
     c = i.asyncIterator || "@@asyncIterator",
     u = i.toStringTag || "@@toStringTag";
-
   function define(t, e, r) {
     return (
       Object.defineProperty(t, e, {
@@ -48,7 +165,6 @@ function _regeneratorRuntime() {
       t[e]
     );
   }
-
   try {
     define({}, "");
   } catch (t) {
@@ -56,14 +172,12 @@ function _regeneratorRuntime() {
       return (t[e] = r);
     };
   }
-
   function wrap(t, e, r, n) {
     var i = e && e.prototype instanceof Generator ? e : Generator,
       a = Object.create(i.prototype),
       c = new Context(n || []);
     return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a;
   }
-
   function tryCatch(t, e, r) {
     try {
       return { type: "normal", arg: t.call(e, r) };
@@ -71,7 +185,6 @@ function _regeneratorRuntime() {
       return { type: "throw", arg: t };
     }
   }
-
   e.wrap = wrap;
   var h = "suspendedStart",
     l = "suspendedYield",
@@ -443,78 +556,308 @@ function _regeneratorRuntime() {
   );
 }
 var _marked = /*#__PURE__*/ _regeneratorRuntime().mark(gen);
+function _awaitAsyncGenerator(e) {
+  return new _OverloadYield(e, 0);
+}
+function _wrapAsyncGenerator(r) {
+  return function () {
+    return new _AsyncGenerator(r.apply(this, arguments));
+  };
+}
+function _AsyncGenerator(e) {
+  var r, t;
+  function resume(r, t) {
+    try {
+      var n = e[r](t),
+        o = n.value,
+        u = o instanceof _OverloadYield;
+      Promise.resolve(u ? o.v : o).then(
+        function (t) {
+          if (u) {
+            var i = "return" === r ? "return" : "next";
+            if (!o.k || t.done) return resume(i, t);
+            t = e[i](t).value;
+          }
+          settle(n.done ? "return" : "normal", t);
+        },
+        function (e) {
+          resume("throw", e);
+        }
+      );
+    } catch (e) {
+      settle("throw", e);
+    }
+  }
+  function settle(e, n) {
+    switch (e) {
+      case "return":
+        r.resolve({ value: n, done: !0 });
+        break;
+      case "throw":
+        r.reject(n);
+        break;
+      default:
+        r.resolve({ value: n, done: !1 });
+    }
+    (r = r.next) ? resume(r.key, r.arg) : (t = null);
+  }
+  (this._invoke = function (e, n) {
+    return new Promise(function (o, u) {
+      var i = { key: e, arg: n, resolve: o, reject: u, next: null };
+      t ? (t = t.next = i) : ((r = t = i), resume(e, n));
+    });
+  }),
+    "function" != typeof e.return && (this.return = void 0);
+}
+(_AsyncGenerator.prototype[
+  ("function" == typeof Symbol && Symbol.asyncIterator) || "@@asyncIterator"
+] = function () {
+  return this;
+}),
+  (_AsyncGenerator.prototype.next = function (e) {
+    return this._invoke("next", e);
+  }),
+  (_AsyncGenerator.prototype.throw = function (e) {
+    return this._invoke("throw", e);
+  }),
+  (_AsyncGenerator.prototype.return = function (e) {
+    return this._invoke("return", e);
+  });
+function _OverloadYield(e, d) {
+  (this.v = e), (this.k = d);
+}
 function gen() {
+  var a, b, c;
   return _regeneratorRuntime().wrap(
     function gen$(_context) {
       while (1)
         switch ((_context.prev = _context.next)) {
           case 0:
-            console.log("first");
-            _context.next = 3;
+            console.log("start");
+            console.log("start");
+            _context.next = 4;
             return 1;
-          case 3:
-            _context.prev = 3;
-            console.log("second");
-            _context.next = 7;
+          case 4:
+            a = _context.sent;
+            console.log("a", a);
+            _context.prev = 6;
+            console.log("try");
+            _context.next = 10;
             return 2;
-          case 7:
-            _context.next = 12;
+          case 10:
+            b = _context.sent;
+            console.log("b", b);
+            _context.next = 17;
             break;
-          case 9:
-            _context.prev = 9;
-            _context.t0 = _context["catch"](3);
-            console.log("error caught");
-          case 12:
-            _context.prev = 12;
-            console.log("clean up");
-            return _context.finish(12);
-          case 15:
-            console.log("done");
-            return _context.abrupt("return", 3);
+          case 14:
+            _context.prev = 14;
+            _context.t0 = _context["catch"](6);
+            console.log("e", _context.t0);
           case 17:
+            _context.prev = 17;
+            console.log("clean up");
+            return _context.finish(17);
+          case 20:
+            _context.prev = 20;
+            console.log("try");
+            _context.next = 24;
+            return 3;
+          case 24:
+            c = _context.sent;
+            console.log("c", c);
+            _context.next = 31;
+            break;
+          case 28:
+            _context.prev = 28;
+            _context.t1 = _context["catch"](20);
+            console.log("e", _context.t1);
+          case 31:
+            _context.prev = 31;
+            console.log("clean up");
+            return _context.finish(31);
+          case 34:
+            _context.next = 36;
+            return 4;
+          case 36:
+            return _context.abrupt("return", 5);
+          case 37:
           case "end":
             return _context.stop();
         }
     },
     _marked,
     null,
-    [[3, 9, 12, 15]]
+    [
+      [6, 14, 17, 20],
+      [20, 28, 31, 34],
+    ]
   );
 }
-
-var g = gen();
-g.next();
-console.log(g);
-
-// g.return("adf");
-// var g1 = gen();
-// g.next();
-// g.throw("error");
-// g.next();
-
-/* ------ source code ------ */
-
-// function* gen() {
-//   console.log('first');
-//   yield 1;
-//   try {
-//     console.log('second');
-//     yield 2;
-//   } catch (e) {
-//     console.log('error caught')
-//   } finally {
-//     console.log('clean up')
-//   }
-//   console.log('done');
-//   return 3;
-// }
-
-// const g = gen();
-
-// g.next();
-// g.return('adf')
-
-// const g1 = gen();
-// g.next();
-// g.throw('error');
-// g.next();
+function agen() {
+  return _agen.apply(this, arguments);
+}
+function _agen() {
+  _agen = _wrapAsyncGenerator(
+    /*#__PURE__*/ _regeneratorRuntime().mark(function _callee() {
+      var a, b, c;
+      return _regeneratorRuntime().wrap(
+        function _callee$(_context2) {
+          while (1)
+            switch ((_context2.prev = _context2.next)) {
+              case 0:
+                console.log("start");
+                console.log("start");
+                _context2.next = 4;
+                return _awaitAsyncGenerator(1);
+              case 4:
+                _context2.next = 6;
+                return _context2.sent;
+              case 6:
+                a = _context2.sent;
+                console.log("a", a);
+                _context2.prev = 8;
+                console.log("try");
+                _context2.next = 12;
+                return _awaitAsyncGenerator(2);
+              case 12:
+                _context2.next = 14;
+                return _context2.sent;
+              case 14:
+                b = _context2.sent;
+                console.log("b", b);
+                _context2.next = 21;
+                break;
+              case 18:
+                _context2.prev = 18;
+                _context2.t0 = _context2["catch"](8);
+                console.log("e", _context2.t0);
+              case 21:
+                _context2.prev = 21;
+                console.log("clean up");
+                return _context2.finish(21);
+              case 24:
+                _context2.prev = 24;
+                console.log("try");
+                _context2.next = 28;
+                return _awaitAsyncGenerator(3);
+              case 28:
+                _context2.next = 30;
+                return _context2.sent;
+              case 30:
+                c = _context2.sent;
+                console.log("c", c);
+                _context2.next = 37;
+                break;
+              case 34:
+                _context2.prev = 34;
+                _context2.t1 = _context2["catch"](24);
+                console.log("e", _context2.t1);
+              case 37:
+                _context2.prev = 37;
+                console.log("clean up");
+                return _context2.finish(37);
+              case 40:
+                _context2.next = 42;
+                return _awaitAsyncGenerator(4);
+              case 42:
+                _context2.next = 44;
+                return _context2.sent;
+              case 44:
+                _context2.next = 46;
+                return _awaitAsyncGenerator(5);
+              case 46:
+                return _context2.abrupt("return", _context2.sent);
+              case 47:
+              case "end":
+                return _context2.stop();
+            }
+        },
+        _callee,
+        null,
+        [
+          [8, 18, 21, 24],
+          [24, 34, 37, 40],
+        ]
+      );
+    })
+  );
+  return _agen.apply(this, arguments);
+}
+function asyncAwait() {
+  return _asyncAwait.apply(this, arguments);
+}
+function _asyncAwait() {
+  _asyncAwait = _asyncToGenerator(
+    /*#__PURE__*/ _regeneratorRuntime().mark(function _callee2() {
+      var a, b, c;
+      return _regeneratorRuntime().wrap(
+        function _callee2$(_context3) {
+          while (1)
+            switch ((_context3.prev = _context3.next)) {
+              case 0:
+                console.log("start");
+                console.log("start");
+                _context3.next = 4;
+                return 1;
+              case 4:
+                a = _context3.sent;
+                console.log("a", a);
+                _context3.prev = 6;
+                console.log("try");
+                _context3.next = 10;
+                return 2;
+              case 10:
+                b = _context3.sent;
+                console.log("b", b);
+                _context3.next = 17;
+                break;
+              case 14:
+                _context3.prev = 14;
+                _context3.t0 = _context3["catch"](6);
+                console.log("e", _context3.t0);
+              case 17:
+                _context3.prev = 17;
+                console.log("clean up");
+                return _context3.finish(17);
+              case 20:
+                _context3.prev = 20;
+                console.log("try");
+                _context3.next = 24;
+                return 3;
+              case 24:
+                c = _context3.sent;
+                console.log("c", c);
+                _context3.next = 31;
+                break;
+              case 28:
+                _context3.prev = 28;
+                _context3.t1 = _context3["catch"](20);
+                console.log("e", _context3.t1);
+              case 31:
+                _context3.prev = 31;
+                console.log("clean up");
+                return _context3.finish(31);
+              case 34:
+                _context3.next = 36;
+                return 4;
+              case 36:
+                _context3.next = 38;
+                return 5;
+              case 38:
+                return _context3.abrupt("return", _context3.sent);
+              case 39:
+              case "end":
+                return _context3.stop();
+            }
+        },
+        _callee2,
+        null,
+        [
+          [6, 14, 17, 20],
+          [20, 28, 31, 34],
+        ]
+      );
+    })
+  );
+  return _asyncAwait.apply(this, arguments);
+}
