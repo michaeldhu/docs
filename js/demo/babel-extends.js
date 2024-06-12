@@ -5,7 +5,7 @@
 
 //   constructor(name) {
 //     this.#name = name;
-//     this.constructor.count += 1;
+//     this.consturctor.count += 1;
 //   }
 
 //   getName() {
@@ -50,8 +50,13 @@
 //   set age(age) {
 //     this.#age = age
 //   }
+
+//   setInformation(phone) {
+//     this.#phone = phone;
+//   }
 // }
 
+// const mark = new Man('mark', 15);
 function _typeof(o) {
   "@babel/helpers - typeof";
   return (
@@ -139,6 +144,9 @@ function _setPrototypeOf(t, e) {
 function _classPrivateMethodInitSpec(e, a) {
   _checkPrivateRedeclaration(e, a), a.add(e);
 }
+function _classPrivateSetter(s, r, a, t) {
+  return r(_assertClassBrand(s, a), t), t;
+}
 function _classCallCheck(a, n) {
   if (!(a instanceof n))
     throw new TypeError("Cannot call a class as a function");
@@ -213,7 +221,7 @@ var People = /*#__PURE__*/ (function () {
     _classCallCheck(this, People);
     _classPrivateFieldInitSpec(this, _name, void 0);
     _classPrivateFieldSet(_name, this, name);
-    this.constructor.count += 1;
+    this.consturctor.count += 1;
   }
   return _createClass(
     People,
@@ -270,6 +278,12 @@ var Man = /*#__PURE__*/ (function (_People2) {
           _classPrivateFieldSet(_age, this, age);
         },
       },
+      {
+        key: "setInformation",
+        value: function setInformation(phone) {
+          _classPrivateSetter(_Man_brand, _set_phone, this, phone);
+        },
+      },
     ],
     [
       {
@@ -288,3 +302,4 @@ function _set_phone(_this2, phone) {
   _classPrivateFieldSet(_p, _this2, phone);
 }
 _defineProperty(Man, "sex", "man");
+var mark = new Man("mark", 15);
