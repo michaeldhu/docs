@@ -1,38 +1,47 @@
-function* gen() {
-  yield 1;
-  yield 2;
-  yield 3;
-  return 0;
-}
-
-function autoExecutor(generator) {
-  const next = generator.next();
-
-  console.log(next);
-
-  if (!next.done) {
-    autoExecutor(generator)
-  }
-}
-
-autoExecutor(gen());
-
-
-function construct() {
+function wrap(genFn, tryEntries) {
   const ctx = {
     next: 0,
-    input: undefined,
-    value: undefined,
+    sent: undefined,
     done: false,
-  };
+    method: 'next',
+    arg: undefined,
+    // try catch block: tryLoc, catchLoc, finallyLoc, afterLoc
+    tryEntries: []
+  }
 
-  function executor() {
+  const invoke = (value) => {
+    return { done: ctx.done, value };
+  }
 
+  const next = (value) => {
+    return invoke(value);
+  }
+
+  const returnFn = (value) => {
+    ctx.done = true;
+    return invoke(value);
+  }
+
+  const throwFn = (reason) => {
+    ctx.done = true;
+    return invoke(reason);
   }
 
   return {
-    next: (value) => {
+    next,
+    return: returnFn,
+    throw: throwFn
+  };
+}
 
+function gen() {
+  // define variables;
+  let a, b;
+  return wrap((ctx) => {
+    while(1) {
+      switch(ctx.next) {
+
+      }
     }
-  }
+  }, [])
 }

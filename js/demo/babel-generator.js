@@ -91,6 +91,19 @@
 //   return await 5;
 // }
 
+// function* gen2() {
+//   yield 1;
+//   yield 2;
+//   yield 3;
+// }
+
+// function* gen3() {
+//   yield* gen2();
+// }
+
+// const gen = gen3();
+// gen.next();
+
 function _typeof(o) {
   "@babel/helpers - typeof";
   return (
@@ -861,3 +874,38 @@ function _asyncAwait() {
   );
   return _asyncAwait.apply(this, arguments);
 }
+
+
+var _marked2 = /*#__PURE__*/_regeneratorRuntime().mark(gen2),
+  _marked3 = /*#__PURE__*/_regeneratorRuntime().mark(gen3);
+function gen2() {
+  return _regeneratorRuntime().wrap(function gen2$(_context) {
+    while (1) switch (_context.prev = _context.next) {
+      case 0:
+        _context.next = 2;
+        return 1;
+      case 2:
+        _context.next = 4;
+        return 2;
+      case 4:
+        _context.next = 6;
+        return 3;
+      case 6:
+      case "end":
+        return _context.stop();
+    }
+  }, _marked2);
+}
+function gen3() {
+  return _regeneratorRuntime().wrap(function gen3$(_context2) {
+    while (1) switch (_context2.prev = _context2.next) {
+      case 0:
+        return _context2.delegateYield(gen2(), "t0", 1);
+      case 1:
+      case "end":
+        return _context2.stop();
+    }
+  }, _marked3);
+}
+var gen = gen3();
+gen.next();

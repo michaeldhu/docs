@@ -118,7 +118,7 @@ In other JavaScript environments such as web workers or Node.js, instead of wind
 
 #### In strict mode
 
-when a function is called directly, not as part of object, its this value is set to undefined.
+when a function is called directly, not as part of object, its `this` value is set to undefined.
 
 ### arity
 
