@@ -9,3 +9,12 @@
 ## 查看
 
 可在 chrome console 中使用 `console.dir` 查看
+
+## Closure
+
+### implementation
+
+- private variables and methods, AMD CommonJS
+- currying
+- debounce, throttle
+- memorize
