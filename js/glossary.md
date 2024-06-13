@@ -90,3 +90,21 @@ Handle functions like any other variables.
 - arguments.callee
 - An in-scope variable that refers to the function
 
+## Closure
+
+### implementation
+
+- emulating private variables and methods, AMD CommonJS
+- currying
+- debounce, throttle
+- memorize
+
+## scopes
+
+Identifier resolving.
+
+Using `console.dir` at chrome dev tool console to check.
+
+- global scope
+- function scope
+- block scope
