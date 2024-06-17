@@ -18,10 +18,12 @@ function Rect(width, height, x, y) {
   this.height = height;
 }
 
-// Object.setPrototypeOf(Rect.prototype, Shape.prototype)
+// instance properties
+Object.setPrototypeOf(Rect.prototype, Shape.prototype)
 // Rect.prototype = Object.create(Shape.prototype)
 
-// Object.setPrototypeOf(Rect, Shape);
+// static properties
+Object.setPrototypeOf(Rect, Shape);
 
 console.log(Rect.prototype)
 

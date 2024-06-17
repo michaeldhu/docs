@@ -90,7 +90,7 @@ Handle functions like any other variables.
 - arguments.callee
 - An in-scope variable that refers to the function
 
-## Closure
+## [Closure](https://en.wikipedia.org/wiki/Closure_(computer_programming))
 
 ### implementation
 
