@@ -382,185 +382,171 @@ Any background-color applied to a table will not be applied to its caption.
 
 ### `code`
 
-#### attributes
+displays its contents styled in a fashion intended to indicate that the text is a short fragment of computer code. By default, the content text is displayed using the user agent's default monospace font.
 
--
-
-#### DOM interface:
+#### DOM interface: HTMLSpanElement
 
 ### `col`
 
-#### attributes
+defines one or more columns in a column group represented by its parent `<colgroup>` element. The `<col>` element is only valid as a child of a `<colgroup>` element that has no span attribute defined.
 
--
-
-#### DOM interface:
+#### DOM interface: HTMLTableColElement
 
 ### `colgroup`
 
+defines a group of columns within a table.
+
+The `<colgroup>` should appear within a `<table>`, after any `<caption>` element (if used), but before any `<thead>`, `<tbody>`, `<tfoot>`, and `<tr>` elements.
+
 #### attributes
 
--
+- span
 
-#### DOM interface:
+#### DOM interface: HTMLTableColElement
 
 ### `data`
 
+links a given piece of content with a machine-readable translation. If the content is time- or date-related, the `<time>` element must be used.
+
 #### attributes
 
--
+- value
 
-#### DOM interface:
+#### DOM interface: HTMLDataElement
 
 ### `datalist`
 
-#### attributes
+contains a set of `<option>` elements that represent the permissible or recommended options available to choose from within other controls.
 
--
-
-#### DOM interface:
-
-### `dd`
-
-#### attributes
-
--
-
-#### DOM interface:
+#### DOM interface: HTMLDataListElement
 
 ### `del`
 
-#### attributes
-
--
-
-#### DOM interface:
-
-### `details`
+ represents a range of text that has been deleted from a document. This can be used when rendering "track changes" or source code diff information.
 
 #### attributes
 
--
+- cite
+- datetime
 
-#### DOM interface:
+#### DOM interface: HTMLModElement
 
-### `dfn`
+### `details` Details disclosure
 
-#### attributes
-
--
-
-#### DOM interface:
-
-### `dialog`
+ creates a disclosure widget in which information is visible only when the widget is toggled into an "open" state. A summary or label must be provided using the `<summary>` element.
 
 #### attributes
 
--
+- open
+- name: This attribute enables multiple `<details>` elements to be connected, with only one open at a time.
 
-#### DOM interface:
+#### events
+
+- toggle
+
+#### DOM interface: 	HTMLDetailsElement
+
+### `dfn` Definition
+
+ indicates a term to be defined.
+
+- The ancestor paragraph (a block of text, sometimes marked by a `<p>` element)
+- The `<dt>/<dd>` pairing
+- The nearest section ancestor of the `<dfn>` element,
+
+#### attributes
+
+- title
+
+#### DOM interface: HTMLElement
+
+### `dialog` 2022
+
+The HTML `<dialog>` element is used to create both modal and non-modal dialog boxes. Modal dialog boxes interrupt interaction with the rest of the page being inert, while non-modal dialog boxes allow interaction with the rest of the page.
+
+Using ::backdrop pseudo-element to set backdrop when then modal is opened.
+
+#### attributes
+
+- open: It is recommended to use the .show() or .showModal() method to render dialogs, rather than the open attribute. If a `<dialog>` is opened using the open attribute, it is non-modal.
+
+#### DOM interface: HTMLDialogElement
 
 ### `dir` Deprecated
 
-#### attributes
-
--
-
-#### DOM interface:
-
 ### `div`
 
-#### attributes
+generic container for flow content.
 
--
+#### DOM interface: HTMLDivElement
 
-#### DOM interface:
+### `dl` Description List
+represents a description list. The element encloses a list of groups of terms (specified using the `<dt>` element) and descriptions (provided by `<dd>` elements). Common uses for this element are to implement a glossary or to display metadata (a list of key-value pairs).
 
-### `dl`
+#### DOM interface: HTMLDListElement
 
-#### attributes
+### `dt` Description Term
 
--
+#### DOM interface: HTMLSpanElement
 
-#### DOM interface:
+### `dd` Description Details
 
-### `dt`
+provides the description, definition, or value for the preceding term (`<dt>`) in a description list (`<dl>`).
 
-#### attributes
+#### DOM interface: HTMLElement
 
--
+### `em` Emphasis
 
-#### DOM interface:
+marks text that has stress emphasis. The `<em>` element can be nested, with each level of nesting indicating a greater degree of emphasis.
 
-### `em`
+#### DOM interface: HTMLSpanElement
 
-#### attributes
+### `embed` Embed External Content
 
--
-
-#### DOM interface:
-
-### `embed`
-
-#### attributes
-
--
-
-#### DOM interface:
+#### DOM interface: HTMLEmbedElement
 
 ### `fencedframe` Experimental
 
-#### attributes
-
--
-
-#### DOM interface:
-
 ### `fieldset`
 
+used to group several controls as well as labels within a web form. Use with legend.
+
 #### attributes
 
--
+- disabled
+- form
+- name
 
-#### DOM interface:
+#### DOM interface: HTMLFieldSetElement
 
 ### `figcaption`
 
-#### attributes
+represents a caption or legend describing the rest of the contents of its parent `<figure>` element, providing the `<figure>` an accessible description.
 
--
-
-#### DOM interface:
+#### DOM interface: HTMLElement
 
 ### `figure`
 
-#### attributes
+represents self-contained content, potentially with an optional caption, which is specified using the `<figcaption>` element. The figure, its caption, and its contents are referenced as a single unit.
 
--
-
-#### DOM interface:
+#### DOM interface: HTMLElement
 
 ### `font` Deprecated
 
-#### attributes
-
--
-
-#### DOM interface:
-
 ### `footer`
 
-#### attributes
+represents a footer for its nearest ancestor sectioning content or sectioning root element. A `<footer>` typically contains information about the author of the section, copyright data or links to related documents.
 
--
-
-#### DOM interface:
+#### DOM interface: HTMLElement
 
 ### `form`
 
+represents a document section containing interactive controls for submitting information.
+
 #### attributes
 
--
+- accept-charset
+- autocapitalize
 
 #### DOM interface:
 
