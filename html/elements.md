@@ -28,9 +28,13 @@ Self-closing tags are required in void elements in XML, XHTML, and SVG.
 
 - headings: h1, h2, h3, h4, h5, h6
 - paragraphs: p
-- lists: ol, ul, li
-- links: a
 - emphasis and importance: span, em, strong, i, b, u
+- quotations: blockquote, q(inline quotation)
+- abbreviations: abbr
+- description lists: dl, dt, dd
+- links: a
+- lists: ol, ul, li
+- code: code
 
 ### layout
 
@@ -40,6 +44,12 @@ Self-closing tags are required in void elements in XML, XHTML, and SVG.
 #### table
 
 ### media
+
+- image: img, figure, figcaption
+- video: video
+- audio: audio
+- svg: svg
+- canvas: canvas
 
 ## Q & A
 
