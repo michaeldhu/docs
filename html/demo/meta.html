@@ -2,9 +2,30 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <meta
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; user-scalable=no">
+    <style>
+      body {
+        font-family: sans-serif;
+        font-size: 32px;
+      }
+      span {
+        font-variant-numeric: tabular-nums;
+      }
+    </style>
   </head>
   <body>
     This is a page of meta demos.
+    <div >the time is <span id="timer"></span>, and is this is movingand is this is movingand is this is movingand is this is movingand is this is movingand is this is movingand is this is movingand is this is movingand is this is moving</div>
+    <script>
+      const fmtTime = (time) => String(time).padStart(2, 0);
+      const timerEle = document.getElementById('timer');
+      const timer = () => {
+        const date = new Date();
+        timerEle.innerHTML = `${fmtTime(date.getHours())}:${fmtTime(date.getMinutes())}:${fmtTime(date.getSeconds())}`;
+      }
+
+      timer();
+      setInterval(timer, 1000)
+    </script>
   </body>
 </html>

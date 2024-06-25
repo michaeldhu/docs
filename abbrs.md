@@ -8,10 +8,13 @@
 - CSS(Cascading Style Sheets)
 - REST(Representational State Transfer)
 - CSP(Content Security Policy)
+- CORS(Cross-Origin Resource Sharing)
 - XSS(Cross-site scripting)
+- CSRF(Cross-site request forgery)
 - REPL(Read-Evaluate-Print Loop)
 - UTC(Coordinated Universal Time)
 - GMT(Greenwich Mean Time)
+- MIME(Multipurpose Internet Mail Extensions)
 
 ## Organizations
 

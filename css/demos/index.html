@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./index.css">
+    <style>
+      body {
+        padding: 0;
+        margin: 0;
+        color: #333;
+      }
+
+      header {
+        position: relative;
+        z-index: 9;
+        height: 80px;
+        background-color: #eee;
+        display: flex;
+      }
+
+      menu {
+        padding: 0;
+        margin: 0;
+        display: flex;
+      }
+
+      li {
+        position: relative;
+        list-style-type: none;
+        width: 150px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background ease-in-out .3s;
+        overflow: hidden;
+        background-color: #ddd;
+      }
+
+      li:hover {
+        overflow: visible;
+        background-color: #ccc;
+      }
+
+      li:hover > .sub-menu {
+        opacity: 1;
+      }
+
+      .sub-menu {
+        flex-direction: column;
+        position: absolute;
+        top: 80px;
+        left: 0;
+        right: 0;
+        opacity: 0;
+        transition: opacity ease-in-out .3s ;
+      }
+
+      .sub-menu-item {
+        height: 60px;
+      }
+
+      .content {
+        display: flex;
+      }
+
+      main {
+        flex: 1;
+      }
+
+      aside {
+        width: 500px;
+      }
+
+      footer {
+        height: 300px;
+        background-color: #aaa;
+      }
+
+      span {
+        padding: 10px;
+        margin: 10px;
+        border: 2px double #333;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <img src="./logo.png" alt="logo">
+      <nav>
+        <menu class="menu">
+          <li class="menu-item">menu 1
+            <menu class="sub-menu">
+              <li class="sub-menu-item">sub menu 1</li>
+              <li class="sub-menu-item">sub menu 2</li>
+              <li class="sub-menu-item">sub menu 3</li>
+              <li class="sub-menu-item">sub menu 4</li>
+              <li class="sub-menu-item">sub menu 5</li>
+            </menu>
+          </li>
+          <li class="menu-item">menu 2
+            <menu class="sub-menu">
+              <li class="sub-menu-item">sub menu 1</li>
+              <li class="sub-menu-item">sub menu 2</li>
+              <li class="sub-menu-item">sub menu 3</li>
+              <li class="sub-menu-item">sub menu 4</li>
+              <li class="sub-menu-item">sub menu 5</li>
+            </menu>
+          </li>
+          <li class="menu-item">menu 3
+            <menu class="sub-menu">
+              <li class="sub-menu-item">sub menu 1</li>
+              <li class="sub-menu-item">sub menu 2</li>
+              <li class="sub-menu-item">sub menu 3</li>
+              <li class="sub-menu-item">sub menu 4</li>
+              <li class="sub-menu-item">sub menu 5</li>
+            </menu>
+          </li>
+          <li class="menu-item">menu 4
+            <menu class="sub-menu">
+              <li class="sub-menu-item">sub menu 1</li>
+              <li class="sub-menu-item">sub menu 2</li>
+              <li class="sub-menu-item">sub menu 3</li>
+              <li class="sub-menu-item">sub menu 4</li>
+              <li class="sub-menu-item">sub menu 5</li>
+            </menu>
+          </li>
+          <li class="menu-item">menu 5
+            <menu class="sub-menu">
+              <li class="sub-menu-item">sub menu 1</li>
+              <li class="sub-menu-item">sub menu 2</li>
+              <li class="sub-menu-item">sub menu 3</li>
+              <li class="sub-menu-item">sub menu 4</li>
+              <li class="sub-menu-item">sub menu 5</li>
+            </menu>
+          </li>
+        </menu>
+      </nav>
+    </header>
+    <div class="content">
+      <main>
+        <article>
+          <h1>article 1</h1>
+          <section>
+            <h2>section 1</h2>
+            <p>paragraph 1</p>
+            <p>paragraph 2</p>
+            <p>paragraph 3</p>
+          </section>
+          <section>
+            <h2>section 2</h2>
+            <p>paragraph 1</p>
+            <p>paragraph 2</p>
+            <p>paragraph 3</p>
+          </section>
+          <section>
+            <h2>section 3</h2>
+            <p>paragraph 1</p>
+            <p>paragraph 2</p>
+            <p>paragraph 3</p>
+          </section>
+        </article>
+        <article>
+          <h1>article 2</h1>
+          <section>
+            <h2>section 1</h2>
+            <p>paragraph 1</p>
+            <p>paragraph 2</p>
+            <p>paragraph 3</p>
+          </section>
+          <section>
+            <h2>section 2</h2>
+            <p>paragraph 1</p>
+            <p>paragraph 2</p>
+            <p>paragraph 3</p>
+          </section>
+          <section>
+            <h2>section 3</h2>
+            <p>paragraph 1</p>
+            <p>paragraph 2</p>
+            <p>paragraph 3</p>
+          </section>
+        </article>
+        <article>
+          <h1>article 3</h1>
+          <section>
+            <h2>section 1</h2>
+            <p>paragraph 1</p>
+            <p>paragraph 2</p>
+            <p>paragraph 3</p>
+          </section>
+          <section>
+            <h2>section 2</h2>
+            <p>paragraph 1</p>
+            <p>paragraph 2</p>
+            <p>paragraph 3</p>
+          </section>
+          <section>
+            <h2>section 3</h2>
+            <p>paragraph 1</p>
+            <p>paragraph 2</p>
+            <p>paragraph 3</p>
+          </section>
+        </article>
+        <form action="">
+          <div><label for="item1">item 1</label><input type="text" id="item1" placeholder="please input something"></div>
+          <div><label for="item2">item 2</label><input type="text" id="item2" placeholder="please input something"></div>
+          <div><label for="item3">item 3</label><input type="text" id="item3" placeholder="please input something"></div>
+          <div><label for="item4">item 4</label><input type="text" id="item4" placeholder="please input something"></div>
+          <div><label for="item5">item 5</label><input type="text" id="item5" placeholder="please input something"></div>
+        </form>
+      </main>
+      <aside>
+        <ul>
+          <li><a href="" src="./link1">related link 1</a></li>
+          <li><a href="" src="./link2">related link 2</a></li>
+          <li><a href="" src="./link3">related link 3</a></li>
+          <li><a href="" src="./link4">related link 4</a></li>
+          <li><a href="" src="./link5">related link 5</a></li>
+        </ul>
+      </aside>
+    </div>
+    <footer>
+      <p>
+        <span>this is a span, does its margin push other boxes away.</span><span>this is a span, does its margin push other boxes away.</span><span>this is a span, does its margin push other boxes away.</span><span>this is a span, does its margin push other boxes away.</span><span>this is a span, does its margin push other boxes away.</span><span>this is a span, does its margin push other boxes away.</span><span>this is a span, does its margin push other boxes away.</span><span>this is a span, does its margin push other boxes away.</span><span>this is a span, does its margin push other boxes away.</span><span>this is a span, does its margin push other boxes away.</span>
+      </p>
+    </footer>
+  </body>
+</html>

@@ -1,11 +1,11 @@
-const STATE = {
+const STATUS = {
   PENDING: 'pending',
   FULFILLED: 'fulfilled',
   REJECTED: 'rejected',
 }
 
-class MyPromise {
-  #state = STATE.PENDING;
+class XPromise {
+  #status = STATUS.PENDING;
   #value = undefined;
   #caches = [];
 
@@ -20,7 +20,7 @@ class MyPromise {
   }
 
   #resolve(value) {
-    if (this.#state !== STATE.PENDING) return;
+    if (this.#status !== STATUS.PENDING) return;
     if (value === this) throw new TypeError('a promise cannot be resolved by itself');
     if ((typeof value === 'object' || typeof value === 'function') && typeof value.then === 'function') {
       try {
@@ -31,14 +31,14 @@ class MyPromise {
       return;
     }
 
-    this.#state = STATE.FULFILLED;
+    this.#status = STATUS.FULFILLED;
     this.#value = value;
     this.#handleCaches();
   }
 
   #reject(reason) {
-    if (this.#state !== STATE.PENDING) return;
-    this.#state = STATE.REJECTED;
+    if (this.#status !== STATUS.PENDING) return;
+    this.#status = STATUS.REJECTED;
     this.#value = reason;
     this.#handleCaches();
   }
@@ -49,17 +49,17 @@ class MyPromise {
   }
 
   #handle(onFulfilled, onRejected, resolve, reject) {
-    if (this.#state === STATE.PENDING) {
+    if (this.#status === STATUS.PENDING) {
       this.#caches.push([onFulfilled, onRejected, resolve, reject]);
       return;
     }
 
     const task = () => {
       try {
-        const cb = this.#state === STATE.FULFILLED ? onFulfilled : onRejected;
+        const cb = this.#status === STATUS.FULFILLED ? onFulfilled : onRejected;
         resolve(cb(this.#value));
       } catch (e) {
-        reject(e)
+        reject(e);
       }
     };
 
@@ -98,55 +98,55 @@ class MyPromise {
   }
 
   static reject(reason) {
-    return new this((rs, reject) => reject(reason));
+    return new this((_rs, reject) => reject(reason));
   }
 
-  static #handleIterable(iterable, executor) {
+  static #handleIterable(iterable, fn) {
     checkIterable(iterable);
     const arr = [...iterable];
     if (!arr.length) return this.resolve(arr);
-
-    return new this(executor.bind(null, arr));
+    return new this(fn.bind(null, arr));
   }
 
   static all(iterable) {
     return this.#handleIterable(iterable, (arr, resolve, reject) => {
       let count = 0, len = arr.length;
-      arr.forEach((item, idx) => this.resolve(item).then(
+      arr.forEach((pms, idx) => this.resolve(pms).then(
         (value) => {
           arr[idx] = value;
           if (++count === len) resolve(arr);
         },
         (reason) => reject(reason)
-      ))
+      ));
     });
   }
 
   static allSettled(iterable) {
     return this.#handleIterable(iterable, (arr, resolve) => {
       let count = 0, len = arr.length;
-      arr.forEach((item, idx) => this.resolve(item).then(
-        (value) => (arr[idx] = { status: STATE.FULFILLED, value }),
-        (reason) => (arr[idx] = { status: STATE.REJECTED, reason }),
-      ).finally(() => (++count === len && resolve(arr))))
+      arr.forEach((pms, idx) => this.resolve(pms).then(
+        (value) => (arr[idx] = { status: STATUS.FULFILLED, value }),
+        (reason) => (arr[idx] = { status: STATUS.REJECTED, reason })
+      ).finally(() => (++count === len && resolve(arr))));
     });
   }
 
   static any(iterable) {
     return this.#handleIterable(iterable, (arr, resolve, reject) => {
       let count = 0, len = arr.length;
-      arr.forEach((item, idx) => this.resolve(item).then(
+      arr.forEach((pms, idx) => this.resolve(pms).then(
         (value) => resolve(value),
         (reason) => {
           arr[idx] = reason;
           if (++count === len) reject(new AggregateError(arr));
         }
-      ))
+      ));
     });
   }
 
   static race(iterable) {
-    return new this((resolve, reject) => [...iterable].forEach(item => this.resolve(item).then(resolve, reject)));
+    checkIterable(iterable);
+    return new this((resolve, reject) => [...iterable].forEach(psm => this.resolve(psm).then(resolve, reject)));
   }
 
   static withResolvers() {
@@ -156,61 +156,63 @@ class MyPromise {
   }
 }
 
-function checkIterable(value) {
-  if (!value || typeof value[Symbol.iterator] !== 'function') {
-    throw new TypeError(`${typeof value} is not iterable`);
+function checkIterable(iterable) {
+  if (!iterable || typeof iterable[Symbol.iterator] !== 'function') {
+    throw new TypeError(`${typeof iterable} is not iterable`);
   }
 }
 
 console.log("test start");
 
-// const p = new MyPromise((resolve, reject) => {
-//   setTimeout(() => reject(100), 1000);
-// });
+const p = new XPromise((resolve, reject) => {
+  // setTimeout(() => reject(100), 1000);
+  setTimeout(() => resolve(100), 1000);
+});
 
-// const p2 = p.then(() => "p2");
+const p2 = p.then(() => "p2");
 
-// const p3 = new MyPromise((resolve, reject) => {
-//   setTimeout(() => {
-//     console.log("try resolve p3");
-//     resolve(p);
-//   }, 100);
-// }).then(
-//   () => {
-//     console.log("p3 resolved");
-//     return "p3 resolved";
-//   },
-//   () => {
-//     console.log("p3 rejected");
-//     return "p3 rejection handled";
-//   }
-// );
+const p3 = new XPromise((resolve, reject) => {
+  setTimeout(() => {
+    console.log("try resolve p3");
+    resolve(p);
+  }, 100);
+}).then(
+  () => {
+    console.log("p3 resolved");
+    return "p3 resolved";
+  },
+  () => {
+    console.log("p3 rejected");
+    return "p3 rejection handled";
+  }
+);
 
 /* ------- all, allSettled, any, race ------- */
-function newP() {
-  return new MyPromise((resolve, reject) => {
-    const range = 2000;
-    const delay = Math.floor(Math.random() * range);
+// function newP() {
+//   return new XPromise((resolve, reject) => {
+//     const range = 2000;
+//     const delay = Math.floor(Math.random() * range);
 
-    setTimeout(() => (delay > range / 2 ? resolve(delay) : reject(new Error(delay))), delay);
-    // setTimeout(() => reject(delay), delay);
-  });
-}
+//     setTimeout(() => (delay > range / 2 ? resolve(delay) : reject(new Error(delay))), delay);
+//     // setTimeout(() => reject(delay), delay);
+//   });
+// }
 
-const p = MyPromise.allSettled([newP(), newP(), newP()])
-p.then((value) => {
-  console.log('resolved', value)
-}, (reason) => {
-  console.log('rejected', reason)
-})
+// const p = XPromise.all([newP(), newP(), newP()])
+// p.then((value) => {
+//   console.log('resolved', value)
+// }, (reason) => {
+//   console.log('rejected', reason)
+// })
 
 // setTimeout(() => console.log('iterable promise', p), 2000)
 
 /* ------- thenable ------- */
-// new MyPromise((resolve, reject) => {
+// new XPromise((resolve, reject) => {
 //   const p = new Promise((rs, rj) => {
 //     setTimeout(() => {
-//       rj(new Error(110));
+//       // rj(new Error(110));
+//       rs('thenable resolved');
 //     }, 1000)
 //   }).then((value) => {
 //     console.log('promise resolved');
@@ -219,20 +221,13 @@ p.then((value) => {
 
 //   resolve(p);
 // }).then((value) => {
-//   console.log('my promise resolved then', value)
+//   console.log('xPromise resolved then', value)
 // }, reason => {
-//   console.log('my promise rejected', reason)
+//   console.log('xPromise rejected', reason)
 // });
 
 /* ------- non-iterable ------- */
 
 // checkIterable(undefined);
-
-// console.log([
-//   ...new Map([
-//     ["a", 2],
-//     ["b", 4],
-//   ]),
-// ]);
 
 console.log("test end");

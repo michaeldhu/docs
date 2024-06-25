@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
+    <title>BFC</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+
+      body {
+        text-align: center;
+      }
+
+      .float {
+        float: right;
+        width: 200px;
+        height: 200px;
+        background-color: #eee;
+      }
+
+      .overflow {
+        height: 200px;
+        overflow: auto;
+        border: 1px solid #eee;
+      }
+
+      .flex {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .fixed {
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: #aaf;
+      }
+
+      .absolute {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: #faa;
+      }
+
+      section {
+        margin-bottom: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <section>
+      <h1>this is the section title 1</h1>
+      <p>main content of each section</p>
+    </section>
+    <section>
+      <h1>this is the section title 2</h1>
+      <p>main content of each section</p>
+    </section>
+    <div class="float">
+      <section>
+        <h1>section in bfc 1</h1>
+        <p>content in bfc</p>
+      </section>
+      <section>
+        <h1>section in bfc 2</h1>
+        <p>content in bfc</p>
+      </section>
+      <section>
+        <h1>section in bfc 3</h1>
+        <p>content in bfc</p>
+      </section>
+      <section class="float">
+        <h1>section in bfc 4</h1>
+        <p>content in bfc</p>
+      </section>
+      <section>
+        <h1>section in bfc 5</h1>
+        <p>content in bfc</p>
+      </section>
+    </div>
+    <section>
+      <h1>this is the section title 3</h1>
+      <p>main content of each section</p>
+    </section>
+    <section>
+      <h1>this is the section title 4</h1>
+      <p>main content of each section</p>
+    </section>
+    <section>
+      <h1>this is the section title 5</h1>
+      <p>main content of each section</p>
+    </section>
+    <section>
+      <h1>this is the section title 6</h1>
+      <p>main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section </p>
+    </section>
+    <section>
+      <h1>this is the section title 3</h1>
+      <p class="float">main content of each section</p>
+    </section>
+    <div class="overflow">
+      <section>
+        <h1>section in bfc 1</h1>
+        <p>main content in bfc, main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section </p>
+      </section>
+      <section class="float">
+        <h1>section in bfc 2</h1>
+        <p>main content in bfc</p>
+      </section>
+      <section>
+        <h1>section in bfc 3</h1>
+        <p>main content in bfc</p>
+      </section>
+      <section class="absolute">
+        <h1>section in bfc 4</h1>
+        <p>main content in bfc</p>
+      </section>
+      <section>
+        <h1>section in bfc 5</h1>
+        <p>main content in bfc</p>
+      </section>
+    </div>
+    <section>
+      <h1>this is the section title 3</h1>
+      <p class="float">main content of each section</p>
+    </section>
+    <section>
+      <h1>section title</h1>
+      <p>section content main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section </p>
+    </section>
+    <div class="flex">
+      <section>
+        <h1>section title 1 in flex bfc</h1>
+        <p>section content 1 in flex bfc main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section </p>
+      </section>
+      <section>
+        <h1>section title 2 in flex bfc</h1>
+        <p>section content 2 in flex bfc</p>
+      </section>
+      <section>
+        <h1>section title 3 in flex bfc</h1>
+        <p>section content 3 in flex bfc</p>
+      </section>
+      <section class="absolute">
+        <h1>section title 4 in flex bfc</h1>
+        <p>section content 4 in flex bfc</p>
+      </section>
+      <section>
+        <h1>section title 5 in flex bfc</h1>
+        <p>section content 5 in flex bfc</p>
+      </section>
+    </div>
+    <section>
+      <h1>this is the section title 6</h1>
+      <p>main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section main content of each section </p>
+    </section>
+  </body>
+</html>
