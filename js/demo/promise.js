@@ -2,7 +2,7 @@ const STATUS = {
   PENDING: 'pending',
   FULFILLED: 'fulfilled',
   REJECTED: 'rejected',
-}
+};
 
 class XPromise {
   #status = STATUS.PENDING;
@@ -10,7 +10,7 @@ class XPromise {
   #caches = [];
 
   constructor(fn) {
-    if (typeof fn !== 'function') throw new TypeError('executor is not function');
+    if (typeof fn !== 'function') throw new TypeError('Executor is not function.');
 
     try {
       fn(this.#resolve.bind(this), this.#reject.bind(this));
@@ -21,13 +21,14 @@ class XPromise {
 
   #resolve(value) {
     if (this.#status !== STATUS.PENDING) return;
-    if (value === this) throw new TypeError('a promise cannot be resolved by itself');
+    if (value === this) throw new TypeError('A promise cannot be resolved by itself.');
     if ((typeof value === 'object' || typeof value === 'function') && typeof value.then === 'function') {
       try {
         value.then(this.#resolve.bind(this), this.#reject.bind(this));
       } catch (e) {
         this.#reject(e);
       }
+
       return;
     }
 
@@ -105,6 +106,7 @@ class XPromise {
     checkIterable(iterable);
     const arr = [...iterable];
     if (!arr.length) return this.resolve(arr);
+
     return new this(fn.bind(null, arr));
   }
 
@@ -146,12 +148,13 @@ class XPromise {
 
   static race(iterable) {
     checkIterable(iterable);
-    return new this((resolve, reject) => [...iterable].forEach(psm => this.resolve(psm).then(resolve, reject)));
+    return new this((resolve, reject) => [...iterable].forEach(pms => this.resolve(pms).then(resolve, reject)));
   }
 
   static withResolvers() {
     let resolve, reject;
     const promise = new this((rs, rj) => (resolve = rs, reject = rj));
+
     return { promise, resolve, reject };
   }
 }
