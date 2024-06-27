@@ -40,6 +40,10 @@
 - [CSP](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)
 - [CSRF](https://developer.mozilla.org/en-US/docs/Glossary/CSRF)
 
+## dev tools
+
+- [package.json](https://docs.npmjs.com/cli/v10/configuring-npm/package-json)
+
 ## glossary
 
 - [base64](https://developer.mozilla.org/en-US/docs/Glossary/Base64)
