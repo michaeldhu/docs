@@ -22,13 +22,13 @@ class XPromise {
   #resolve(value) {
     if (this.#status !== STATUS.PENDING) return;
     if (value === this) throw new TypeError('A promise cannot be resolved by itself.');
-    if ((typeof value === 'object' || typeof value === 'function') && typeof value.then === 'function') {
-      try {
+    try {
+      if ((typeof value === 'object' || typeof value === 'function') && typeof value.then === 'function') {
         value.then(this.#resolve.bind(this), this.#reject.bind(this));
-      } catch (e) {
-        this.#reject(e);
+        return;
       }
-
+    } catch (e) {
+      this.#reject(e);
       return;
     }
 
